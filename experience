@@ -1,0 +1,2177 @@
+/* vim: set ft=text: */
+##############################################################################
+
+config codeblocks for wxwidgets
+
+if you want to compile and link wxwidgets project,do as following:
+compiler and debugger-->compiler settings-->other options:
+	add `wx-config --cflags`
+compiler and debugger-->linker settings-->other options:
+	add	`wx-config --libs`
+
+
+note: 
+if you want to build normal c/c++ project rather than wxwidgets projects, you
+must remove `wx-config --cflags` and `wx-config --libs`.  a better choice is
+to set the target project's properties including compiler and linker options
+where you can set `wx-config --cflags` and `wx-config --libs`.
+
+##############################################################################
+
+add desktop icon for apps.
+create and edit appName.desktop file in /usr/share/applications.
+
+please note,Icon=.../fg,fg is a picture without expanded name.
+
+##############################################################################
+
+install stardict to search words in terminal
+
+1)	install 'sdcv' which is the core of programme.  
+	sudo apt-get install sdcv
+2)	download the dictionaries from site: 
+	http://abloz.com/huzheng/stardict-dic/
+3)	extract the downloaded files and extract them into the path
+	'/usr/share/stardict/dic'
+
+to use it conveniently,set some alias cmds,which was written in .bashrc,to use
+different dictionaries.
+
+##############################################################################
+
+security of GRUB
+lock grub interaction
+lock start item
+lock both grub interaction and start item
+
+##############################################################################
+
+start a program when os started
+
+1)	we can create a symbolic link of actual programme or put that programme in
+	the folder /etc/init.d/.
+
+2)	then we should execute command 'update-rc.d' to install links into
+	/etc/rcNumber.d,for example:
+	sudo update-rc.d name start priorityNum runlevel . stop priorityNum2
+	runlevel.
+
+##############################################################################
+
+mpg123 : use shell to play music
+
+now i want to say,it is nice !
+##############################################################################
+
+to extract specific column content from result of 'ls -l' or other cmds
+
+cut -d'delimiter' -fFiledNO
+
+example: cat filename | cut -d',' -f2
+	-d means delimiter,-f means fields.
+
+	awk '{print $number}' can be an alternate method.
+##############################################################################
+
+in text mode:
+adjust brightness:
+echo number > /sys/class/back_light/intel_backlight/brightness
+
+adjust volume:
+run 'alasmixer'
+in text mode,when zhcon running,alsamixer interface will be messed up!
+
+##############################################################################
+
+purge all configruation files of the deinstalled packages
+dpkg -l |grep ^rc|awk '{print $2}' |sudo xargs dpkg -P 
+##############################################################################
+
+how to boot through "GRUB"
+
+here are the three methods to start linux from grub cli:
+1)	ls
+	linux (hd0,msdos10)/vmlinuz root=/dev/sda10 [...other options]
+	initrd (hd0,msdos10)/initrd.img 
+	boot
+
+2) 	ls
+	linux (hd0,msdos10)/boot/vmlinuz-3.2.0-23-26-generic root=/dev/sda10
+	[...other options]
+	initrd (hd0,msdos10)/boot/initrd.img-3.2.0-26-generic
+	boot
+
+	actully, /vmlinuz,/initrd are symbolic links to /boot/..
+
+3)  configfile (hd0,msdos1)/boot/grub/grub.cfg
+	boot	
+
+4) for windows os
+	
+	here are the only method to start windows from grub cli:
+
+	rootnoverify (hd0,msdos1)	:this option prevents grub trying to mount
+								:partition hd0/msdos1
+
+	chainloader +1				:this option +1 let grub try to load the
+								:proper boot-loader for windows from the 1st
+								:fan sector of (hd0,msdos1)
+
+this is useful when you reinstall windows os,windows bootloader will override
+mbr and other os boot items will be missing.  then you can use a linux live cd
+to boot into grub command line interface,use method above to boot into
+linux,then reinstall grub.
+##############################################################################
+
+download website
+wget -r -p -np -k url
+-r :recursively
+-p :download picture
+-np:don't ascend to the parental directory 
+-k :modify the relavant link
+##############################################################################
+
+linux core version
+major.minor.release-revise
+主版本号.次版本号.释出版本-修改版本
+主版本号.次版本号为偶数，稳定版本，为奇数，表示开发中版本
+
+linux核心版本号 与 某linux发行版本号，是不同的概念
+##############################################################################
+
+acpi call module
+
+sudo apt-get install git
+git clone http://github.com/mkottman/acpi_call.git
+cd acpi_call/
+make
+sudo insmod ./acpi_call.ko
+uname -r
+sudo cp acpi_call.ko /lib/modules/<UNAME -R VALUE>/kernel/drivers/acpi/
+sudo depmod
+
+	***
+	note: 'sudo depmod',this step is of vital importance because 'depmod'
+	generates file 'modules.dep' which can be used by other modules.  if we
+	didn't execute 'depmod' before restart,pc will spend more start-up time
+	because the dependencies haven't been worked out.
+
+vim /etc/modules,add line 'acpi_call'
+run ./test-sh
+
+Trying \_SB.PCI0.P0P1.VGA._OFF: failed
+Trying \_SB.PCI0.P0P2.VGA._OFF: failed
+Trying \_SB_.PCI0.OVGA.ATPX: failed
+Trying \_SB_.PCI0.OVGA.XTPX: failed
+Trying \_SB.PCI0.P0P3.PEGP._OFF: failed
+Trying \_SB.PCI0.P0P2.PEGP._OFF: failed
+Trying \_SB.PCI0.P0P1.PEGP._OFF: failed
+Trying \_SB.PCI0.MXR0.MXM0._OFF: failed
+Trying \_SB.PCI0.PEG1.GFX0._OFF: failed
+Trying \_SB.PCI0.PEG0.GFX0.DOFF: failed
+Trying \_SB.PCI0.PEG1.GFX0.DOFF: failed
+Trying \_SB.PCI0.PEG0.PEGP._OFF: works!
+
+add 'echo "\SB.PCI0.PEG0.PEGp._OFF" > /proc/acpi/call' into your script file
+/etc/rc.local.  
+
+note:
+after 'sudo depmod' is run,add 'acpi_call' into file /etc/modules is ok, too.
+for my pc,the last cmd works!
+
+use 'cat rate /proc/acpi/battery/BAT1/state' to check current power!
+##############################################################################
+
+use mentohust to instead of ruijie(xrgsu)
+	
+##############################################################################
+
+use Chinese characters in LaTeX
+
+support chinese	:	sudo apt-get install latex-cjk-all
+pay attention to the document format:
+
+\documentclass{article}
+\usepackage{CJK}
+\begin{document}
+\begin{CJK}{UTF8}{gbsn}	%gbsn/gkai are supported while GB not supported
+...
+\end{CJK}
+\end{document}
+
+generally,the supported fonts' directory is :
+/usr/share/texmf/tex/latex/CJK/
+
+note: 
+in current dir,dirName is the encoding name,fonts in it are all supported.
+##############################################################################
+
+disable or renable the download bar of chrome
+	1) how to disable
+	chrome://flags-->disable 'new download gui'
+	2) how to get it back
+	just delete the config info of current user,'sudo rm -r
+	/home/zhangjie/.config/chrome/Profile 1'
+##############################################################################
+
+customize the background image of grub2 and login shell
+
+note:
+	after seting up the splash image of grub2,the menu color can't be set.
+
+	if we don't use splash image of grub2,we can use the following way to set
+	the menu color on grub2.
+
+	edit /lib/plymouth/themes/default.grub:
+		set menu_color_normal=color1/color2
+		set menu_color_highlight=color1/color2
+
+1.change background color of Grub
+	
+	cd /lib/plymouth/themes/
+	modify default.grub,substitute the current color r,g,b to your favorite
+	one.
+
+  change background image of Grub
+	
+	cp imagePath /boot/grub/
+	update-grub
+
+2.change the background color which appears before login interface.
+	
+	cd /lib/plymouth/themes/ubuntu-logo
+	modify '*.scrpit','vim *.script',
+	change the major color and minor color set by function
+	'SetBackground...(r,g,b)'.  note that value of 'r' is 'r/255',values of
+	'g' and 'b' are calculated as the same method.
+
+3.change the picture or color shown before the login interface appear
+	
+	cd /usr/share/glib-2.0/schemas/
+	record the file name,'grep *greeter* *',then modify its contents.
+	change the background(image) and background-color(color),if your
+	like,change the 'draw desktop background' and 'startup sound'.
+
+	glib-compile-schemas ./
+
+	suggestion: 
+	set the schema 'background' as a image rather than color can accerlarate
+	the loading speed.
+##############################################################################
+
+ mount windows file system in /etc/rc.local or in /etc/fstab.
+	
+	in /etc/rc.local:
+	# mount /dev/disk/by-label/Document /media/document
+	# mount /dev/disk/by-label/Multi-media /media/multi-media
+
+	in /etc/fstab:
+	UUID=..... /media/... ntfs rw 0 0
+	
+	note:
+		if we want to use 'Trash' mechanism in linux desktop distribution such
+		as Ubuntu,'user,gid=1000,uid=1000' must be added to the mount option
+		in fstab in the following manner:
+		UUID=... /mount-point fs-type defaults,user,gid=1000,uid=1000 0 0
+
+		use command 'blkid' to check the UUID and LABEL for all partitions and
+		command 'id' to check the user's group identifier and user identifier.
+		only files owned by current user(or you are super user),files can be
+		deleted to the trash and restored from there.
+
+		UUID means 'Univerally Unique Identifier'.
+##############################################################################
+ fix desktop environment
+
+ at times,some essential packages to desktop environment components may be
+ removed when we uninstall some gnome based programmes.
+ on this occasion,maybe the reason is some unity or gnome components are
+ uncarefully removed.
+ do as the following to fix this problem:
+	1)	install package 'unity-greeter',then we can login into desktop
+	environment.
+
+	2)	install package 'unity,unity-2d,unity-2d-shell' to add the
+	'unity,unity-2d' display solution besides 'gnome,gnome classic,gnome
+	classic(no effect).
+
+	3)install package 'gnome-icon-themes,gnome-icon-themes-full,gnome-mono' to
+	install our needed common icons for desktop environment.
+
+	4)install package 'gnome-tweak-tool' to slightly adjust the desktop
+	environment components to make it much more beautiful.
+
+	note:
+	before uninstalling a package,you'd better use 'apt-cache rdepends' to
+	check whether there're other packages requiring it.
+##############################################################################
+	change the order of buttons 'minimize,maximize,close' and the positon of
+	these buttons on windows.
+
+	start app 'gconf' and search branch '/apps/metacity/general' and find the
+	item 'button_layout',change its value.
+
+	for example,if the value is ':minimize,maximize,close',then the three
+	buttons are on the right side of windows in the order
+	'minimize,maximize,close';
+
+	note that this colon ':' control the position of buttons on windows.
+
+	then if we want to set the three buttons on the left side on windows in
+	order 'close,minimize,maximize',then we can set item 'button_layout' to
+	value 'close,minimize,maximize:'
+
+##############################################################################
+	optimize the initramfs
+
+	vim /etc/initramfs-tools/initramfs.conf
+	change item "MODULES=most" to "MODULES=dep".
+	then "sudo update-initramfs -u"
+##############################################################################
+	activate 'brightness and lock'
+
+	if we want to activate the feature 'dim screen' and 'lock screen' in
+	system settings 'brightness and lock',services 'acpi-daemon' and 'acpid'
+	must be enabled.
+
+	ACPI means 'Advanced Configuration and Power management Interface'.
+##############################################################################
+
+	solve the encoding mistakes in vim
+	
+	edit ~/.vimrc and add the following lines:
+
+	1) set the character encoding in buffer
+	set encoding=utf-8
+	2) set the character encoding when written to files
+	set fileencodings=utf-8,gb2312,gbk,gb18030
+	3) set the character endoding when output to terminal
+	set termencoding=utf-8
+
+	gedit can't handle Chinese encoding,too, install 'Kate' instead of it.
+##############################################################################
+	ERROR 1045 (28000): Access denied for user 'root'@'localhost'.
+
+	this fault is similar to the previous one. so, how to fix it?
+
+	1) stop process 'mysqld'
+		sudo service mysqld stop
+	2) start process mysqld_safe with special options to fix it
+		sudo mysqld_safe --skip-grant-tables --skip-networking &
+	3) launch mysql client to connect to database mysql
+		mysql -h localhost mysql
+	4) check whether there's something wrong in the user table
+		select host,user,password from user;
+
+		it it not allowed to exist user whose name is empty, so first delete
+		those users, then change your root password with following cmd.
+		
+		update user set password=PASSWORD('justdoit') where user='root';
+	5) kill process mysqld_safe
+		sudo pkill mysqld_safe
+	6) restart mysql service
+		sudo service mysql start
+	7) user mysql client to connect the mysql server again
+		mysql -h localhost -u root -p
+
+		all done !
+##############################################################################
+	can not create user ???
+
+	do it similarly as mentioned above to check whether the user has right
+	privileges.
+
+##############################################################################
+
+	enable 'charset auto detect' in chrome browser
+
+	tools->encoding->auto detect
+##############################################################################
+
+	remove marks '
+' at the end of lines
+	press ctrl+V then ctrl+M to generate mark '
+',then we can use :%s/
+//g
+	to delete them.
+##############################################################################
+
+	detect and convert file encodings
+
+	'chardet' : detect file encoding
+	'iconv'	  : convert file encoding from one to another
+
+	script:{
+
+		step 1: detect charset of specified files
+
+		#!/bin/bash
+		for file in 'ls | grep php'
+		do 
+			chardet $file >> ~/Desktop/tmp/encoding
+		done
+
+		step 2: convert charset of specified files from one to another
+
+		#!/bin/bash
+		for line in `cat encoding | grep GB2312 | awk '{print $1}'`
+		do
+			lenght=${#line}
+			line=`echo ${line:0:length-1}`
+			echo $line
+			/usr/bin/iconv -f GB2312 -t UTF-8 /path/php/$line >> ./$line
+		done
+
+		echo "convertion finished !"
+	}
+##############################################################################
+
+	add a new font into system
+
+	1) copy relavent font files that end with *.ttf to
+	/usr/share/fonts/customized_dir/.
+	2) enter customized_dir,'cd customized_dir_path'
+	3) 'sudo mkfontscale'
+	4) 'sudo mkfontdir'
+	5)'sudo fc-cache -fv'
+	6)'restart os'
+
+	but note,if you want to display the Chinese characters well,you had better
+	install the software 'Language Support' from the Software Center.
+##############################################################################
+
+	after wine has been installed,windows notepad will be the default text
+	editor,but when wine has been uninstalled,option in context menu 'open
+	with notepad' is still there,while notepad has been uninstalled,too.
+
+	we can edit file '~/.local/usr/applications/mimeinfo.cache' for current
+	user or '/usr/share/applications/mimeinfo.cache' for all users on this
+	computer.
+
+	change 'text/plain=...' to 'text/plain=kde4-kate',then kate will be
+	default text editor.
+##############################################################################
+
+	use 'gnome classic' theme instead of 'gnome' or 'unity' themes when login
+	in Ubuntu.
+
+	several techniques:
+	1)	'gnome-panel --replace' to restart panel on desktop
+
+	2)	'win+alt' + 'right click' to open menus to remove unnecessary icons on
+	bars.
+
+	3)	to remove 'notification area',put the cursor on the left side of this
+	area,press 'win+alt' and 'right click' to remove the 'notification area'.
+
+	4)	use	'indicator applet complete' to replace 'notification area' 
+
+	5)	right click the blank dot(a small blank area) to the left of windows
+	list on the bottom panel to customize the preferences.
+##############################################################################
+
+	source file
+	source .bashrc in bash
+	source .vimrc in vim
+
+	you can't source .vimrc file in bash.
+##############################################################################
+
+	remove style 'unity' and 'unity 2d',just use 'gnome','gnome
+	classic','gnome classic(no effect)'.
+
+	apt-get purge unity unity-2d unity-2d-places unity-2d-panel unity-2d-spread 
+	apt-get purge unity-asset-pool unity-services unity-lens-* unity-scope-*
+	apt-get purge liboverlay-scrollbar*
+	apt-get purge appmenu-gtk appmenu-gtk3 appmenu-qt
+	apt-get purge firefox-globalmenu thunderbird-globalmenu
+	apt-get purge unity-2d-common unity-common
+	apt-get purge libunity-misc4 libunity-core-5*
+
+	you'd better use 'apt-cache rdepends' to check whether there're other
+	packages depending on the package to be uninstalled.
+#######################################///////////
+
+	enable 'localhost/phpmyadmin' to access phpmyadmin
+
+	sudo ln -s /usr/share/phpmyadmin /var/www/phpmyadmin
+##############################################################################
+
+	customize notification fade time and position
+
+	Open a terminal window and enter these commands one by one:
+
+	sudo add-apt-repository ppa:leolik/leolik 
+	sudo apt-get update
+	sudo apt-get upgrade
+	sudo apt-get install libnotify-bin
+	pkill notify-osd
+	This installs a patched version of the notify-osd package. Then you will
+	need to install the GUI configuration tool, to do this enter these
+	commands one by one into a terminal window:
+
+	sudo add-apt-repository ppa:nilarimogard/webupd8
+	sudo apt-get update
+	sudo apt-get install notifyosdconfig
+	To use the congfiguration tool type "notify" into the dash and launch the
+	NotifyOSD Configuration application.
+##############################################################################
+
+	restore scripts in /etc/grub.d
+
+	purge all grub* package,then reinstall grub2.
+##############################################################################
+
+	change volume icon at the top panel.
+	cd /usr/share/icons/
+	find -name audio-volume-*
+
+	put the audio-volume-* icons that you like into the target icon theme
+	directory to replace the target icons.
+##############################################################################
+
+	about the background wallpaper
+
+	i want to put a picture into /boot/grub in order to load background image
+	on grub interface, but i also want to use another picture as the desktop
+	wallpaper,also,i don't want the grub background wallpaper appear again
+	before the desktop wallpaper is loaded,how to i realize it?
+	1)firstly,in .bashrc,we use shell commands to access the .gconf
+	configuration file which consist the desktop wallpaper information,do it
+	as following:
+
+		TEMP1=`cat ~/.gconf/desktop/gnome/background/%gconf.xml`
+		TEMP2=`echo ${TEMP1#*//}`
+		WALLPAPER=`echo ${TEMP2%</stringvalue>*}`
+		ln -sf $WALLPAPER /home/zhangjie/.background.jpg
+		TEMP1=""
+		TEMP2=""
+	2)secondly,edit  /usr/share/glib-compile-schemas/*greet*:	
+		set the schema 'background' to '/home/zhangjie/.background.jpg'
+
+	now it can automatically load the desktop wallpaper now,we needn't edit
+	'*greet*' after we changed desktop wallpaper from now on.
+
+	we can also put the shell cmds mentioned above into a script file,i copy
+	the cmds into /usr/bin/update-background.
+##############################################################################
+
+	modify ubuntu_logo or progress_dot_on.png
+
+	if you want to change the color,image->mode must be changed from 'index'
+	to 'rgb'
+##############################################################################
+
+	install oracle java instead of openjdk or icedea version
+
+	1)	First you need to remove openjdk for this run the following command
+	from your terminal
+
+	sudo apt-get purge openjdk*
+
+	2)  If you installed java 7 from any other PPA and you are having problem
+	with java then you have to do following steps before installing the PPA
+	menctioned here
+
+	sudo rm /var/lib/dpkg/info/oracle-java7-installer*
+	sudo apt-get purge oracle-java7-installer*
+	sudo rm /etc/apt/sources.list.d/*java*
+	sudo apt-get update
+
+	3)	Install oracle java 7 in ubuntu 12.04
+
+	sudo add-apt-repository ppa:webupd8team/java
+	sudo apt-get update
+	sudo apt-get install oracle-java7-installer
+
+	You can check the java version by searching java in dashboard
+##############################################################################
+
+	eclipse can't load swt relevant libraries
+
+	ln -s /usr/lib/jni/libswt-* ~/.swt/linux/x86_64/
+##############################################################################
+	zhcon --utf8
+
+	if error occurs,check the permission of file /usr/bin/zhcon, 'chmod 4755
+	/usr/bin/zhcon', to enable all users to execute this program with root
+	permission.
+##############################################################################
+
+	change the hostname
+
+	cmd 'hostname':
+		display current hostname: 'hostname'
+		change hostname temporarily: 'hostname newname'
+	
+	change hostname forever,edit file /etc/hostname,the modification won't
+	take effect until next boot.
+##############################################################################
+
+	ssh/telnet to login in remote server
+	
+	ssh: need sshd running,install openssh-server to make it.
+		 login remote server: ssh username@ip-server
+	telnet: need telnetd running,install openbsd-inetd
+		 login remote server: telnet username@ip-server
+	
+    copy file between remote server and local machine,use cmd 'scp'
+		scp usrname@ip-src:/path/file1 username@ip-des:/path/file2
+##############################################################################
+
+	on my thinkpad x61t,tomcat7 doesn't allow to access the symlinks,but it
+	indeed worked on my samsung pc.  i really don't know why.  i have to move
+	all the jsp source files to the /var/lib/tomcat7/webapps/ROOT/,and create
+	a symlink named ~/Documents/jsp pointing to
+	/var/lib/tomcat7/webapps/ROOT/.
+
+	i have found a resolution,that is create a descriptive file within
+	/etc/tomcat7/Catalina/localhost/.
+##############################################################################
+
+	place window on the proper position,such as 'smart','center','maximized'
+	and so on.
+
+	use compiz to customize it.
+##############################################################################
+
+	install 'mysql workbench' instead of 'emma'
+##############################################################################
+
+	wireshark
+
+	by default,only user in group sudo can capture packets,how to enable
+	non-sudo user capture the packets.
+
+	'sudo dpkg-reconfigure wireshark-common'
+	choose option 'yes' and press enter to install 'dumpcap'
+	then 'sudo chmod +x /usr/bin/dumpcap'
+##############################################################################
+
+	in single-user mode,remount fs '/' in order to edit files
+
+	mount -o rw,remount /
+	-o: options
+	rw: read and write
+	remount: umount first,then remount
+	/: the root filesystem
+##############################################################################
+
+	single-mode reset root passwd
+
+	select 'recovery mode' and press 'e' to change the kernel parameters,i.e,
+	change 'ro' to 'rw' to enable write operation on filesystems,and change
+	'recovery' to 'single' to enable single-mode that give you the root
+	privilege,and ...
+
+	don't forget to add 'init=/bin/bash' to the parameter list in order to
+	start bash for emergent recovery operation.
+
+	then you'll get the root privileges and do whatever you want.
+##############################################################################
+
+	ps -lax
+	ps -aux
+
+	-l : long format
+	-a : all processes
+	-x : processes that don't have control terminal
+	-u : output format is user-oriented
+##############################################################################
+
+	strace
+
+	use cmd 'strace' to trace programmes' system calls and signals
+##############################################################################
+
+	redirect
+	
+	for input:
+		1) '<' : redirect the input from stdin(fd0) to the right file of
+		operator '<'.
+
+	for output:
+		1) > : redirect the output from stdout(fd1) to the right file of
+		operator '>'.
+		2) &> : redirect both the stdout(fd1) and stderr(fd2) to the right
+		file of operator '&>'.
+		3) 2> : redirect only the stderr(fd2) to the right file of operator
+		'2>'.
+		4) 1> : redirect only the stdout(fd1) to the right file of operator
+		'1>'.
+##############################################################################
+
+	fuser/lsof
+
+	fuser: identifying processes that are using specific file
+	lsof: list open files by specific process
+
+	df : report disk usage of filesystem
+	du : report disk usage of file
+
+##############################################################################
+
+	remove dir,cmd 'rm' or 'rmdir'
+	remove file,cmd 'rm' or 'unlink'
+##############################################################################
+
+	useradd,userdel,usermod
+
+	add a user:
+	sudo useradd username	// generate an item in /etc/passwd and /etc/shadow
+							// in /etc/shadow,item 'username:*:...',field '*'
+							// points out user 'username' can't login because 
+							// lack of passwd.
+
+	sudo passwd username	// then set a initial passwd for user 'username'
+
+	sudo mkdir /home/username	// by default,/home/username is the home
+								// folder for user 'username'.
+
+	sudo chown username:username /home/username -R	// give user 'username'
+													// proper authority to
+													// access its home folder.
+	
+	we can use cmd 'adduser' instead to finish all operations mentioned above.
+
+	delete a user:
+		sudo userdel username	// home folder is left that need to be deleted 
+		sudo rm -rf /home/username
+##############################################################################
+	Exception in thread "AWT-EventQueue-0" java.awt.HeadlessException: 
+	No config0ost().
+	config0X11 DISPLAY variable was set, but this program performed an
+operation wxwidgets0Post().
+	config0ost0hich requires it.
+	config0cp#onPopupPost().
+
+	solution:
+		export DISPLAY=hostname:0.0
+##############################################################################
+
+	byobu bugs
+
+	when edit files in vim within byobu,the speed is too slowly,especially
+	when pressing 'tab' key.
+
+	we'd better close byobu to edit in vim,then all the speed of
+	'acp','snippet' and other plugins will be guaranteed
+##############################################################################
+
+	command line to operate network connection
+
+	first,stop network-manager,'sudo service network-manager stop'.
+
+	// for open or WEP encrypted access point
+	
+	sudo ifconfig wlan0 up		// start wlan0
+	sudo iwlist wlan0 scan		// scan nearby wireless networks
+								// choose wireless network and configure
+	sudo iwconfig wlan0 mode ... essid ... key [open | num | s:passphrase]
+	sudo dhclient -v wlan0		// to get a dynamic ip
+
+	note:
+		iwconfig only supports the wifi networks that are "open" unencrypted
+		or "WEP" enabled.
+
+		iwconfig doesn't support wifi networks that using "WPA/WPA2".
+	
+	// for WPA/WPA2 encrypted access point
+	
+	sudo ifconfig wlan0 up
+	sudo iwconfig wlan0 mode managed
+	
+	wpa_passphrase ESSID PASSWORD > wpa.conf
+	sudo wpa_supplicant -B -D wext -i wlan0 -c wpa.conf &> /dev/null
+	sudo dhclient wlan0 -v
+
+	// on ubuntu distro
+	
+	because the up-start service 'network-manager' take charge of all network
+	interface,if we do manually as mentioned above for other distros,some
+	exceptions may occur even though the service 'network-manager' has been
+	stopped.
+
+	we'd better use network-manager cmdline tools 'nmcli' to finish this task.
+
+	nmcli con list		// list all avaiable network-connections,including
+						// wired and wireless conns
+
+	nmcli con up id ...	// id value,actually,is the conn's name
+##############################################################################
+
+	environment variable DISPLAY
+
+	1) set default display for current machine,take my thinkpad x61t as an
+	example.
+	
+		i should add lines into /etc/profile,wait next reboot or source it.
+
+			DISPLAY="localhost:0.0"
+			export DISPLAY
+
+
+	2) if i want to run X-appliation that reqire connection with X-server
+
+		if i want to run x-application on remote machine,i should set DISPLAY
+		to 'remoteHostname:0.0'.
+
+		example:
+			ssh zhangjie@10.42.0.1
+			cd ~/Videos/MV
+			DISPLAY=fm:0.0
+			export DISPLAY
+			totem MvFileName
+			
+	both 1) and 2) , actually, set DISPLAY to 'hostname:0.0',but when the
+	given hostname is current machine's hostname,the hostname will be set to
+	'localhost'.
+
+	hostname can be set to IP.
+##############################################################################
+
+	desktop environment:
+		gnome
+		gnome classic
+		gnome classic ( no effect )
+	
+	run cmd 'apt-get install gnome-shell'
+
+	if you want to install gnome classic only,just install
+	'gnome-session-fallback'
+##############################################################################
+
+	*.jar file 
+
+	mv *.jar *.zip
+	unzip *.zip
+
+	or:
+
+	jar xvf *.jar
+
+	then,we can get the *.class file,and use 'javap' we can check the
+	className and function from *.class file.
+##############################################################################
+
+	disable the notification bubbles
+
+	the best method i found out is :
+	1) kill process 'notification-daemon'
+	2) sudo apt-get purge notification-daemon
+
+	this method let me remove the package notification-daemon but reserve
+	package gnome-fallback-session.
+##############################################################################
+
+	cmd_1 && cmd_2	: only cmd_1 is successfully executed,can cmd_2 be
+	executed.
+
+	cmd_1 || cmd_2  : only cmd_1 fails,can cmd_2 be executed.
+##############################################################################
+
+	/ : slash
+	\ : backslash
+##############################################################################
+
+	sort -t'delimiter' -kFieldNO -f -r
+##############################################################################
+
+	tee 
+	copy pipe data stream,one portion will be output to stream 'stdout',the
+	other portion will be output to specified file.
+
+	example:
+		ls | tee ls_result
+##############################################################################
+
+	execute shell script
+	1) ./filename
+	2) bash filename
+	3) source filename
+##############################################################################
+
+	find findPath -name pattern
+
+	specify findPath before find,you don't have to change work-directory to
+	the root '/'
+##############################################################################
+
+	a=1
+	b=2
+	c=$a+$b--->c=1+2--->treat $a+$b as the string operation
+	c=$(($a+$b))--->c=3--->treat $a+$b as number operation
+
+	if you want number operation,put the expression within $((...))
+##############################################################################
+
+	array in shell script
+	
+	example:
+	array=(aa 'bb cc' dd)
+	${array[0]) ---> aa
+	${#array[*]) equals ${#array[@]}, its value is 3, the length of array.
+	${#array[0]),its value is 2,the length of first element 'aa' in 'array'
+	note:
+		for ele in "array"--->on this case,"array" will reserve the former
+		structure of "array",(aa 'bb cc' dd).
+
+		for ele in array--->on this case,array's former structure is
+		broken,(aa bb cc dd).
+##############################################################################
+
+	update-rc.d serviceName { start | stop } priorityNum runlevels
+	
+	example:
+		update-rc.d cups start 80 2 3 4 5 . stop 80 1 6
+##############################################################################
+
+	/etc/sudoers
+
+	example:
+		Cmnd_Alias LDAP = /usr/bin/ldapadd, 
+						  /usr/bin/ldapdelete, 
+						  /usr/bin/ldapmodify
+		Host_Alias = 
+			format : 1) ip address
+					 2) ip/netmask
+		User_Alias = bob, tom, lucy
+		Runas_Alias = 
+			it is similar to User_Alias
+		
+		format:
+		User Host = (Runas User) Cmd1,Cmd2,...,Cmdn
+	
+	note:
+		we must set a passwd for account 'root',then modify user privileges
+		within file '/etc/sudoers':
+			zhangjie ALL=(ALL:ALL) ALL 
+		then we can use 'visudo -cf /etc/sudoers' to parse this configuration
+		file to check whether it is syntax right.  'su' is allowed now.
+##############################################################################
+
+	ls --hide=pattern
+	ls --ignore=pattern (or ls -Ipattern for short)
+
+	doesn't list the file entries that match the pattern
+##############################################################################
+
+	umask is used by open and mkdir
+##############################################################################
+
+	harddisk volume < 2TB : install Windows MBR partition table
+	tools: cfdisk or fdisk
+
+	harddisk volume > 2TB : install GPT partition table
+	tools: parted
+##############################################################################
+
+	format Udisk
+
+	1) sudo fdisk /dev/sdb
+	2) 'd' to delete specified partition
+	3) 'n' to add new partiton
+	4) 'w' to write partition table
+	5) 'q' to quit
+##############################################################################
+
+	dump: bakup files or filesystems for ext2/3/4
+	restore: restore files or filesystems backuped with dump
+##############################################################################
+
+	ipcalc: calculate the network and host
+
+	example:
+		ipcalc 192.168.1.1 255.255.0.0
+		or
+		ipcalc 192.168.1.1/16
+
+	output:
+		Address:   192.168.1.1          11000000.10101000. 00000001.00000001
+		Netmask:   255.255.0.0 = 16     11111111.11111111. 00000000.00000000
+		Wildcard:  0.0.255.255          00000000.00000000. 11111111.11111111
+		=>
+		Network:   192.168.0.0/16       11000000.10101000. 00000000.00000000
+		HostMin:   192.168.0.1          11000000.10101000. 00000000.00000001
+		HostMax:   192.168.255.254      11000000.10101000. 11111111.11111110
+		Broadcast: 192.168.255.255      11000000.10101000. 11111111.11111111
+		Hosts/Net: 65534                 Class C, Private Internet
+##############################################################################
+
+	for ssh issue 'refused to connect'
+
+	solution: remove /home/USERNAME/.ssh/known_hosts,then retry again
+##############################################################################
+
+	LVM means what?
+	no volume groups found?
+##############################################################################
+
+	thindpad x61t:
+	press "F1" to enter BIOS configuration when startup
+	use "USB-HDD" to boot up the machine when using Udisk
+##############################################################################
+
+	how to identify the dependencies and reverse dependencies
+
+	use 'apt-cache'
+	apt-cache depends packagname
+	apt-cache rdepends packagename
+##############################################################################
+
+	set cursor blink frequency:
+
+	cursor_blink_time	: gconf-editor,set its value to 300 miliseconds
+##############################################################################
+
+	set text-mode terminal font:
+
+	sudo dpkg-reconfigure console-setup	: choose font 'VGA'
+##############################################################################
+
+	reinstall package:
+
+	sudo apt-get --reinstall install packagename
+##############################################################################
+
+	libpeerconnection	: modify /opt/google/chrome/google-chrome
+
+	# create libpeerconnection within directory /tmp
+	cd /tmp
+
+	exec -a "$0" "$HERE/chrome"  "$@"
+##############################################################################
+
+update-alternatives
+sudo update-alternatives --config "masterLinkName"
+sudo update-alternatives --install "link" "masterLinkName" "path" priority
+
+maybe,to change the environment variable PATH in .bashrc is a better way.
+##############################################################################
+
+install java plugins for chrome:
+1) bad way:
+
+	ln -s /usr/lib/jvm/jdk-1.7.0_25-oracle/jre/lib/i386/libnpjp2.so
+	~/.mozilla/plugins
+
+2) good way:
+
+	cd /opt/google/chrome
+	mkdir plugins
+	cd plugins
+	sudo ln -s /usr/lib/jvm/jdk-1.7.0_25-oracle/jre/lib/i386/libnpjp2.so
+	./plugins/
+
+3) best way
+
+add-apt-repository to install oracle java.
+this method will modify the default jre which other packages may depend on
+from openjdk to oracle java.
+
+this way may come more up to our want.
+##############################################################################
+
+LaTex /leiteks/
+
+it is a document markup language,not refer to an application
+#######################################/////////
+
+qBittorrent : 
+ 
+in fact,this software uses search engine btdigg.org
+##############################################################################
+
+	ctags generate tags for c/c++/qt4
+
+	ctags --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++
+
+	for c glibc/kernel:
+		ctags --C-kinds=+dfgm --language-force=C -R .
+	for user c files:
+		ctags --C-kinds=+dfglm --language-force=C -R .
+
+	note:
+		please don't use ctags Ctrl+] to refer to header files. it doesn't
+		work well, but we can use TTlistToggle to browse the headers and open
+		it, then we can use Ctrl+\ to jump back.
+##############################################################################
+
+	format codes
+
+	tool: indent
+	indent -kr -i4 filename.c
+##############################################################################
+
+	gdb common cmds:
+
+	start
+	run
+	quit
+
+	finish			-- continue running until current function finishes
+	backtrace(bt)	-- list function calls as stack frame
+					   bt cmd is usually used to fix segmentation fault
+
+	frame(f)		-- select stack frame
+	info(i) locals	-- list local vars and their values
+
+	list(l)			-- list following 10 lines
+	list lineNO.
+	list funcName
+
+	next(n)			-- next
+	step(s)			-- step(into)
+	continue(c)		-- continue running until a breakpoint is encountered
+
+	print(p)		-- print value of var for this time
+	display			-- print value for the following every time
+	undisplay
+	x/7b			-- one byte one group,print 7 groups
+					   x cmd print memory info
+
+	watch			-- display old and new value when var's value changes
+					   this kind of vars are called watchpoints
+	info watchpoints
+		
+	break(b)
+	break if(b if)
+	info breakpoints	
+	delete breakpoints
+	disable breakpoints
+	enable breakpoints
+
+
+	set Var			-- change value of var
+##############################################################################
+
+	objdump -dS ObjFile
+
+	note: 
+		this ObjFile must be compiled with -g option,-g option need the source
+		code existing.  -S option implies that -d option is specified,and this
+		-S option need the source code existing,too.
+
+	display assembling language and c language in mixed mode.
+	this is a good way to learn assembling language
+
+	*****************
+
+	gcc -S filename.c
+
+	this method also lets you view the matched assembling language code.
+##############################################################################
+
+	nm, list symbols of object files
+
+#######################################//////////
+
+	1)check linux kernel version:  uname
+	2)check linux distribution version: lsb_release
+	  or you have to check file content:	
+	  /etc/*-release or /etc/issue
+##############################################################################
+
+	manual bootparam is an introduction to all boot parameters;
+	manual X is an introduction to X Window System.
+##############################################################################
+
+	centos,add parameter vga=0x34C to change vga resolution to 1366x768 when
+	bootup
+##############################################################################
+
+	c programming,macro definition
+
+	1) # and ##
+	#value --> "value"
+	a ## b --> ab
+	2) length-variable parameter list
+	...			: length-variable paramter list,used in function macro
+	definition.
+	__VA_ARGS	: reference to length-variable parameter list,used in function
+	macro definition body.
+	3)not all macros must be defined in *.c file
+	using 'gcc -D' to define a macro
+##############################################################################
+
+	centos,install 'ncurses-devel',because 'make menuconfig' requires this
+	package
+
+	using 'make menuconfig' to generate '.config' file,
+	using 'make' to compile needed modules into kernel, besides, it generates
+	configuration info which is stored in autoconf.h,'autoconf.h' will be
+	included in 'config.h'.
+
+	ubuntu,install 'libncurses5-dev' instead of 'ncurses-devel'.
+
+	note:
+		when on different distros, some required packages' names may be
+		different.
+##############################################################################
+
+gcc -E	:	stop after preprocess,generate *.i from *.c
+gcc -S	:	stop after compile,generate *.s from *.i
+gcc -c	:	stop after assemble,generate *.o from *.s
+gcc		:	stop after link,generate executable file from *.o
+##############################################################################
+
+gcc -MM automatically generates the dependencies for all object files
+
+how to build Makefile ?
+1) gcc -MM *.c > Makefile	
+	: this method only generate the dependencies for "headers"
+   gcc -M  *.c > Makefile	
+	: this method will generate the dependencies for <headers> and "headers"
+2) 
+recommend to adding lines:
+|	all: main
+|	main: obj1.o obj2.o obj3.o
+|		gcc $^ -o $@
+
+or
+
+|	main: *.o
+|		gcc *.o -o main
+##############################################################################
+
+make
+make all
+make install
+make clean
+		|---|
+			|- we'd better declare 'clean' as a phony target, why need we do 
+			|- this ? because target 'clean' has no prerequires, and, if a 
+			|- file named 'clean' exists, cmds following 'clean:' will not be
+			|- executed. add '.PHONY clean' to declare 'clean' as a phony 
+			|- target.
+.PHONY clean
+make distclean
+
+make -n : list cmds that will be executed but not execute them
+make -C : entering directory and execute the Makefile within it
+##############################################################################
+
+linux assemble language,there're two types:
+	AT&T,used by gcc.
+	intel,used by official intel documentation and Microsoft.
+
+differencies between AT&T and Intel formats:
+	1) AT&T,should add prefix % before registers.
+	2) AT&T,should add prefix $ before immediate operand. 
+	3) AT&T,should put source operand on the left,while destination operand on
+	the right.  ...
+
+linux assemble language compiler:
+	NASM,using intel format
+
+	nasm -f elf filename.asm
+	ld -s -o filename filename.o
+	./filename
+##############################################################################
+
+	system call 'open(pathname,flags,mode)' to create file,actually the
+	created file's privilege is 'mode & (~mask)'.
+
+	touch --> value of mode is 0666.
+	gcc   --> value of mode is 0777.
+
+	how to prove ? umask 0.
+##############################################################################
+
+	evince, a programme to view pdf, enable 'evince' to display Chinese
+	characters
+
+	install package 'poppler-data'
+##############################################################################
+
+	od
+	dump files in octal or other formats
+
+	example:
+		od -t x1c filename
+
+##############################################################################
+
+	in-band and out-of-band transmission
+
+	in-band:
+		data flow and control flow are transmitted through the same
+		connection.
+	out-of-band:
+		data flow and control flow are transmitted througn respective
+		connections.
+##############################################################################
+
+	one network-adaptor can bind several IP address.
+	several network-adaptors can be bond to one IP address.
+##############################################################################
+
+	install 2.6.32.61 kernel
+
+	download linux-2.6.32.61.tar.xz
+	tar xvfJ linux-2.6.32.61.tar.xz
+	cd linux-2.6.32.61
+	make menuconfig
+	make
+		:this step generates the 'vmlinuz'
+	make modules 
+		:this step build up modules and its dependencies
+	make modules_install
+		:install kernel modules
+	make install
+		:install kernel and generate initrd.img and update grub.cfg
+
+	done!
+##############################################################################
+
+	dmesg
+
+	use dmesg to view the info stored in kernel ring buffer.
+##############################################################################
+
+	uptime
+
+	tell you how long the system has been running from startup
+##############################################################################
+
+	split: 分割文件，这个比较实用。
+		  split -b 1m srcfile prefix,这条命令表示将文件srcfile以1m为约定尺寸，
+		  将 其进行分割，分割后的文件将以prefix加上自动追加的编号命名。 split
+		  -l，将按照行数进行分割。 split -c，与-b类似，按照字节数进行分割，但
+		  是分割的时候尽量保持行的完整性。
+##############################################################################
+
+	dd： 主要是从文件或者设备读取信息，然后输出到设备或者文件。功能相当强大，
+		 可以用来拷贝文件/备份磁盘数据/备份恢复mbr等等。
+##############################################################################
+
+	ps aux | grep zhcon
+	pgrep zhcon
+
+	note:
+		pgrep can get the pid of specified process
+##############################################################################
+
+	add hotkeys to run a new shell in vim
+
+	add line in ~/.vimrc:
+	map <Leader>r :sh<CR>
+	
+	note:
+		<Leader>r, this manner, after you type in <Leader>r, vim will keep
+		waiting for some more typed 'keys', so you can obviously feel there' a
+		delay before 'sh' is executed.
+
+		why ? 
+
+		because in vim default configuration, some combinations of <Leader>r
+		and other keys have been defined, so vim has to wait to avoid
+		neglecting some hotkeys.
+
+		how to solve this problem ?	--|
+									  |
+	map <Leader>rr :sh<CR>	<---------|
+
+	if you don't want to display the cmd, add <silent> as following:
+	map <silent> <Leader>rr :sh<CR>
+	
+	done!
+##############################################################################
+
+route -n
+route add -net/netmask | -host(default) .../.. | .. gw ... metric .. device
+route del -net/netmask | -host(default) .../.. | ..
+####################################################
+
+/etc/passwd:
+	loginname:password:uid:gid:username:homefolder:shell
+	password field is set to x.
+
+/etc/shadow:
+	loginname:encryptedpassword:lastchange:.......
+##############################################################################
+
+ping : send ICMP echo_request to network hosts and wait for the echo_reply.
+
+-c :count
+-f :flood ping
+-i :interval
+-D :time
+-s :packet size
+	why 8 bytes added to the specified size ?
+	because size of ICMP header data is 8 bytes.
+
+	ICMP header format ???
+-t :time to live,>=1
+-b :allows ping a broadcast address
+##############################################################################
+
+tcpdump : dump packets on interface
+
+-D
+-d
+-e
+-i :interface
+-K
+-l
+-q
+-S
+-X :it's very handy
+-A :display data in ascii
+
+-w :store captured packets into file
+-r :read packets data from file
+
+filter options:
+dst host
+src host
+host
+port
+tcp
+udp
+...
+
+how to extract the username and password or other something ?
+
+when we submit something, for example, a username, the server side will
+respond to the client side with status code.  around the status code, there
+may be something which you will be intersted in.
+##############################################################################
+
+convert from ascii to hex:
+	
+	hexdump -x
+	od -x
+
+convert from hex to ascii:
+
+	echo -e "\xHH\xHH\xHH\xHH"
+
+convert hex to decimal:
+	
+	echo $((0xaa))
+##############################################################################
+
+cache dns records
+
+in ubuntu 12.04, dnsmasq is built into network-manager and it'll be started
+when network-manager is started.  but dnsmasq defaultly is set to disable the
+dns-cache function, you can find the evidence from /var/log/syslog.
+##############################################################################
+
+w3m hotkeys
+
+H:		display help messages
+U:		go to url
+B:		back to previous buffer
+s:		pop up buffer selection window
+v:		show html source code
+Esc-s:	save current html source file into file
+S:		save buffer into file, the buffer refers to the terminal
+C-l:	redraw screen
+
+##############################################################################
+
+dig: to lookup dns record
+
+dig hostname [option list]
+
++short
++nocomments		+comments
++noauthority	+authority
++noaddtional	+additional
++nostats		+stats
++noanswer		+answer
++noquestion		+question
++noall
+
+"dig hostname +nocomments +noauthority +noaddtional +nostats +noquestion"
+is equivalent to
+"dig hostname +noall +answer".
+
+-t soa
+-t a
+-t ns
+-t mx
+-t any
+-t cname ??? acutally, non-existent
+
+-x ptr, reverse lookup for PTR record
+   how does reverse lookup works ???
+   what does AAAA record mean ??? a record resolves hostname to a IPv6 address
+   in DNS
+
+@dnsserver to use a specified dns server for lookup
+example:
+	dig @202.12.27.33 redhat.com -t ns +noall +answer
+	202.12.27.33 is one of the 13 root domain name servers, and it's deployed
+	in Japan.
+
+-f to use data file to query several websites
+example:
+	dig -f filename -t ns +noall +answer
+
+you can also query several websites in one command line, do it as following:
+	dig hostname1 -t type1 [option list] hostname2 -t type2 [option list]
+example:
+	dig redhat.com -t ns +noall +answer centos.org -t a +answer
+
+~/.digrc
+	add options within this file to set the default query options.
+example:
+	append text '+noall +answer', then next time when you start dig, options
+	'+noall' and '+answer' will be automatically appended to the cmd option
+	list, but these options won't be displayed.
+
+##############################################################################
+
+
+nslookup, using interactive mode to lookup is very convenient.
+
+common interactive cmds:
+
+server: specify a domain name server
+host  : spefify a hostname that you want to lookup, usually host cmd can be 
+		neglected, i.e, you can directly type in the hostname.
+set q=type:
+		set the query type, ns/a/cname/mx/ptr/soa.
+
+set q=ns, then type '.' to display all 13 root domain name servers.
+
+exit  : exit programme
+##############################################################################
+
+for CNAME record:
+
+usually we think the format of CNAME record is :
+|| Alias Hostname | CNAME | Canonical Hostname ||
+but actually, it may be not set as you supposed, for example, the right-hand
+field 'Canonial Hostname' may not a canonical name but another alias hostname,
+this leads to so-called 'alias chain' or 'alias cycle'.
+
+so, you may not be able to use one single lookup through all CNAME records to
+find out the canonical hostname.  but, among all presented alias chains, we
+can pick out the right side hostnames and put them together, all of them must
+appear in the alias chains in some order, so we can find out which of them is
+the canonical hostname by comparison.
+
+if 'alias cycle' among CNAME records occurs, CNAME type query should respond
+an error message.
+##############################################################################
+
+for PTR record:
+
+the best option is to resolve the IP address to the Canonical Hostname.
+
+rfc doesn't point out dns must implement the reverse query, it is optional.
+if the dns receives an unsupported query request, it should respond an error
+message.
+
+rfc doesn't require we must set only one PTR record for the same one IP address.
+so, some people may set multiple PTR records on the same on IP address.
+it is not reccommended !
+why ?
+first, if we set multiple PTR records for the same one IP address. amony of
+the multiple PTR records, several alias hostname and canonical hostname are
+contained. when an PTR type request comes, dns works in round-robin for
+load-sharing, and the PTR records matched are resorted in round-robin and then
+responded to your client programme. usally, the programme select the first PTR
+record and resolve the IP address to the hostname.
+if the resolved hostname is an alias hostname, when we access it, something
+wrong may happen if some other hosts has an same alias hostname. it leads
+to a problem, Hosts : IP = n : 1, it is unacceptable.
+so, as mentioned above, one IP should always be resolved to the canonical
+Hostname.
+
+so, dig -x, usally can  resolve the IP address to the Canonical Hostname.
+while, nslookup -cname, can process ordinary "alias | cname | canonical"
+format CNAME record, 'alias chain' and 'alias cycle' format CNAME records
+to find out the Canonical Hostname.
+
+dig can't directly lookup the Canonical Hostname with the Alias Hostname
+through CNAME type records.  you have to lookup the A type record to find out
+the IP address, then lookup the PTR type record to find it.
+
+note:
+	one IP address should have only one PTR record.
+	but one domain, such as 10.in_addr.arpa, can have several PTR records,
+	because one domain, i.e, one network, can have multiple gateways.
+
+##############################################################################
+
+A checksum or hash sum is a small-size datum computed from an arbitrary block
+of digital data for the purpose of detecting errors that may have been
+introduced during its transmission or storage.  The actual procedure that
+yields the checksum, given a data input, is called a checksum function or
+checksum algorithm.
+
+checksum can be used to check the data's integrity, but it can't be used to
+check data's authentication.  we should use hash function to check whether
+data has been changed.
+
+if data is changed, maybe the checksum stays the same, but the hash value is
+largely sure to change.
+
+checksum tools:
+	cksum
+
+hash tools:
+	'md5sum'
+	is equivalent to
+	'openssl dgst -md5'
+##############################################################################
+
+	shell script
+
+	num=1
+	num=$((${num}+1))
+##############################################################################
+
+match in vim:
+
+.	match only one character
+.*	match characters more than one
+##############################################################################
+
+	nm: list symbols from object files.
+	gdb: disas /m
+	objdump -S
+##############################################################################
+
+	64-bit computing
+
+	in computer architecture, 64-bit computing is the use of processors that
+	have datapath widths, integer size, and memory addresss widths of 64 bits. 
+
+	also, 64-bit CPU and ALU architetures are those that based on registers,
+	address buses, or data buses of that size. 
+
+	from the software perspective, 64-bit computing means the use of code with
+	64-bit virtual memory address.
+
+	computer artechture    : function
+	computer composition   : logical implementation
+	computer implementation: physical implementation
+
+	uname -m: machine hardware name 
+	uname -p: processor type
+	uname -i: hardware platform ( supported hardware platform by current
+			operating system, implicitly indicating the current operating
+			system type )
+
+	machine hardware name (family) means the cpu family, 'cat /proc/cpuinfo',
+	if the 'cpu family' is 6, it is i686, similar for 3, 4, 5.
+
+	process type means the same as the machine hardware name.
+##############################################################################
+
+tcp_wrapper,what's this?tcpd?	*
+it's a facility for access control of internet services
+
+inet,what's inetd?
+there's no /etc/inetd.conf file.
+after you install iputils-inetd, you can use 'update-inetd' to configure
+/etc/inetd.conf to control the Internet Services.
+##############################################################################
+
+how to configure /etc/hosts.allow and /etc/hosts.deny?	
+daemon-list : client-list [ : shell command list ]
+##############################################################################
+
+shell redirect
+1>&2
+2>&1
+&>/dev/null
+##############################################################################
+
+ssh-keygen
+
+generate rsa public and private keys
+##############################################################################
+
+ssh redirect
+
+1) local port redirect, aims to access remote host through local port
+
+ssh -L localPort:remoteHost:remoteHostPort remoteHost
+telnet localhost localPort
+
+note:
+ssh -p specifies the port that will be used by the ssh server on remote host.
+ssh -D specifies the port that will be used by the ssh client on local host.
+
+	providing ssh server on remote host uses port PORT-R, and ssh client on
+	localhost uses PORT-L, then ssh local port redirect works as following:
+
+	ssh creates a connection between PORT-L and PORT-R to communicate with ssh
+	protocol.
+
+	ssh on the local host redirects input from stdin to 'PORT-L', and
+	encrypted the message, then send the message to PORT-R on the remote host,
+
+	ssh on the remote host receives the message from PORT-R, and unencrypted
+	the message, then redirects the message to remoteHostPort.
+
+2) remote port redirect, aims to access local host through remote host
+ssh -R remoteHostPort:localhost:localPort remoteHost
+on remote host:
+telnet localhost remoteHostPort
+##############################################################################
+
+lo, loopback interface
+
+loopback is used to test local host' IP stack to check whether it is normally
+initialized.
+##############################################################################
+
+cmd:
+
+echo zzjie_scu | base64
+enpqaWVfc2N1Cg==
+
+echo justdoit9497 | base64
+anVzdGRvaXQ5NDk3Cg==
+
+when i telnet the smtp.163.com and request the authentication, i always
+failed.
+why?
+i used the online base64 app to code the string zzjie_scu and the result was
+enpqaWVfc2N1.
+by comparison, i found 'Cg==' was appended when i executed 'echo zzjie_scu |
+base64'.
+then i wanted to see what did 'Cg==' mean.
+i executed 'echo Cg== | base64 -d', then i found out it means a newline
+character.
+so i realized i should add option '-n' to delete the trailing newline
+character when using echo.
+the right cmd is 'echo -n zzjie_scu | base64'.
+##############################################################################
+
+1) telnet, send emails
+
+telnet smtp.163.com 25
+helo hhhh
+auth login
+base64-username
+base64-passwd
+mail from:<username1@163.com>	: can't masquerade
+rcpt to:<username2@domain>		: one recipient, one 'rcpt to:<...>'
+data
+from:							: masquerade from, to and subject for
+								: inexperienced computer users
+to:
+subject:
+hhhhhhhhhhhhhhhhhhh
+.								: end input
+quit
+
+note:
+	for experienced computer users, they may check the source content, where
+	they can check the 'Sender' to identify whom this mail comes from on
+	earth.
+
+2) telnet, receive emails
+
+telnet pop3.163.com 110
+user username
+pass password
+stat								: check mail status
+list								: list emails
+top emailNum lines					: display email's header
+retr emailNum						: display email's content
+dele emailNum						: delete email
+quit
+##############################################################################/
+
+uninstall specified package and ignore the dependencies.
+
+using dpkg, add option '--ignore-depends=packageNameIgnored'
+example:
+	gnome-tweak-tool depends on gnome-shell, if i want to uninstall
+	gnome-shell and reserve gnome-tweak-tool, do as following:
+	sudo dpkg -P --ignore-depends=gnome-tweak-tool gnome-shell
+##############################################################################/
+
+	lightdm and kdm	
+
+	sometimes, lightdm can't login, then you can try kdm, then change the
+	/etc/X11/default-display-manager to let the lightdm serve as the default
+	one.
+##############################################################################/
+
+get the pid of specified process
+
+cat /var/run/processName.pid
+##############################################################################/
+
+	ddrescue
+	with the help of 'ddrescue/gddrescue', i rescued the video data in dvd
+##############################################################################/
+
+	in codeblocks environment configuration:
+
+	gnome-terminal -t $TITLE -x
+	instead of
+	xterm -T $TITLE -e
+##############################################################################/
+
+	check tty configurations
+
+	stty -a
+##############################################################################/
+
+1) for static archive:
+ar
+	c: create
+	r: insert into archive with replacement
+	v: verbose
+	q: quick append
+
+	ar crv lib-name *.o
+	note:
+		the archive name must be prefixed by 'lib', or the lib won't be found 
+
+	example:
+		main.c add.c minus.c headers.h
+		
+		1) gcc -c add.c
+		   gcc -c minus.c
+		   gcc -c main.c
+		2) ar crv libfunc.a add.o minus.o
+		3) gcc -o main main.o -L. -lfunc	(when linking)
+		   gcc -o main main.o libfunc.a		(when linking)
+
+		   gcc -o main main.c -L. -lfunc	(when compiling)
+		   gcc -o main main.c libfunc.a		(when compiling)
+		4)./main
+
+
+2) for dynamic archive:
+ldd:
+	to check the shared libraries that needed by specified programme
+gcc -shared
+	to generate the *.so
+	
+	example:
+	main.c add.c minus.c headers.h
+
+	1) gcc -c add.c
+	   gcc -c minus.c
+	   gcc -c main.c
+	2) gcc -shared -o libfunc.so add.o minus.o
+	3) gcc -o main main.o -L. -lfunc		(when linking)
+	   gcc -o main main.o libfunc.so		(when linking)
+
+	   gcc -o main main.c -L. -lfunc		(when compiling)
+	   gcc -o main main.c libfunc.so		(when compiling)
+
+	   before running, set the environment variable LD_LIBRARY_PATH
+	   you'd better set it up within .bashrc
+	
+gcc:
+	-L: the lib directory that to be searched
+	-l: link the lib-name
+
+##############################################################################/
+
+	notify-send	"msg"
+##############################################################################/
+
+	ns2: Network Simulator 2
+
+	nam: Network AniMator
+##############################################################################
+	disable event sound
+
+	edit *sound*xml	in /usr/share/glib-2.0/schemas.
+##############################################################################
+disable animation on panel-bar
+
+by default, the animation is displayed. for example, i put a chrome icon on
+the panel-bar in order to launch it more conveniently, but when i launch it,
+it will display an animation which sometimes makes me sick.  
+
+how to disables it ?
+edit file /usr/share/glib-2.0/schemas/org.gnome.desktop.interface.gschema.xml,
+to disable 'enable-animation', don't forget to exec 'glib-compile-schemas .'.
+##############################################################################
+	install and configure LXR	
+
+	LXR is short for 'Linux Cross Referencer', it is a nice tool to read source
+code, it worths trying.
+
+	install:
+	1) download the lxr-<x.x.x>.tar.gz.
+	2) unpack the tar.gz file.
+	3) read the 'INSTALL' file within directory lxr-<x.x.x.>/doc, and do as it
+	says.
+
+	ok, i will simply summarize the points that you have to pay attenttion.
+
+	1) install perl interpreter (>=5.10), then exec 'perl -v' to check whether
+	you have installed it correctly.
+
+	2) intall exuberant	ctags (>=5.0), then exec 'ctags-exuberant --version'
+	to check whether you have installed it correctly.
+
+	3) install a relational database, such as mysql, so you should try to
+	install several packages, including mysql-client, mysql-server, ...  after
+	installed, try to check whether you can connect to mysql server normally,
+	and the privileges of user root.
+
+	4) install a web server, such as apache2. after installed, fire your
+	browser at http://localhost to check whether it works normally.
+
+	install apache mod_perl, sudo apt-get install mod_perl.
+
+	5) install swish-e for freetext searching, you can download the package
+	from offical site and install it manually, or you can use apt package
+	manager to finish that, you just need exec 'sudo apt-get install swish-e'.
+	then exec 'swish-e -V' to check whether it runs normally.
+
+	or:
+	download and manually install it, pay attention to its dependencies.
+
+	6) install perl database driver interface (DBI) and relevant drivers
+	(database driver, DBD). you can download it from the offical site and
+	install it manually.  or, you can use apt package manager to install them.
+	just exec 'sudo apt-get install libdbi-perl' and 'sudo apt-get install
+	libdbd-odbc-perl'. i used the first way, if you fail, try the other one.
+
+	or:
+	sudo yum install 'perl-DBI.x86_64'
+	sudo yum install 'perl-DBD-MySQL.x86_64'
+	sudo yum install 'libdbi-mysql.x86_64'
+
+
+	7) install perl file mmagic module, download it from official site, or use
+	CPAN, or use apt to exec 'sudo apt-get install libfile-mmagic-perl'.
+
+	8) download the lxr-<x.x.x>.tar.gz from the offitial site.
+
+	9) unpack it to /usr/local, and rename it from lxr-<x.x.x> to lxr.
+
+	10) cd /path/lxr, and exec './genxref --checkonly' to check whether the
+	nessessary components have been installed and detected.
+
+	11) configure LXR and the database.
+	after installation, this step is also frequently used, so you must pay
+	attention to master it.
+		1) exec './scripts/configure-lxr.pl', it is an interactive script, so
+		you can configure it conveniently, sometimes, you may be confused,
+		don't be upset, try it again and again until you make it.
+
+		
+		2) after configuration, some configuration files will be generated
+		according to the template files within /path/lxr/templates, these
+		configuration files will be put into /path/lxr/custom.d, and .htaccess
+		will put into /path/lxr.
+
+		as i have checked, file .htaccess doesn't need to be modified, but
+		file 'apache-lxrserver.conf' and 'lxr.conf' need modifying. maybe it
+		is a bug of /path/lxr/genxref, why do i say so? 
+		when it prompt for the hostname, you type '//localhost' or
+		'//127.0.0.1', but the configuration is "hostname==>http://l" or
+		"http://1" both in the two files listed above. check it and correct it.
+
+		after modification, put /path/custom.d/lxr.conf to /path/lxr, and put
+		/path/custom.d/apache-lxrserver.conf to /etc/apache/conf.d.
+
+		3) also, you must change the line 'NameVirtualHost *' to
+		'NameVirtualHost localhost', and the line '<VirtualHost *>' to
+		'<VirtualHost localhost>', and the line 'ServerName l' or 'ServerName
+		1' to 'ServerName localhost' or 'ServerName 127.0.0.1'.
+
+		or you can adopt other more intelligent techniques, reference 'Apache
+		Configuration' in my QZone.
+
+		4) ok, all modification is done, then issue './custom.d/initdb.sh', it
+		will create the database user $dbuser with root, then create the
+		tables with $dbuser.
+	
+		5) generate the index. fire the following command, this process of
+		building index may takes a long time, so sit down and play something
+		else.
+		'./genxref --url=http://$hostname/$sectionname --treename=$treename',
+		you can add other options, such as '--version=$version', actually,
+		'$version' is the name of subdirectory  of your source directory.
+		'--reindexall' may be another useful option.
+
+		6) after the process of building index finished, fire your browser at
+		'http://$hostname/$sectionname/source' to check your source tree. you
+		can browse the code now.
+
+		pay attention, accessing 'http://$hostname/$sectionname' will throws
+		an error of 'do not have  permission to access $sectionname on this
+		server'. 
+		please and be sure to use 'http://$hostname/$sectionname/source'
+		instead.
+
+	12) Enjoy !
+##############################################################################
+/etc/motd, motd, is short for 'Message of The Day'.
+login message /etc/motd is regenerated based on file /etc/motd.tail. by
+default, this file doesn't exist on system, so create /etc/motd.tail manually.
+##############################################################################
+change the preprompt message before login, edit /etc/issue and /etc/issue.net.
+##############################################################################
+time 'program' to check 'realtime, userspace-time, kernelspace-time'
+##############################################################################
+	vim:
+	1. verbose set fo
+		list last configuration for option 'formatoptions'
+	2. ~/.vim/after/plugin/filetype.vim will be executed by vim. a text file
+	without specifying modeline or extension name, then it will be treaded as
+	'conf' filetype, so /usr/share/vim/vim72/ftplugin/conf.vim will be
+	executed.
+
+		a better method is, we specify modeline at the top or end of file to
+	specify the filetype, then we put a new configure file into 
+	~/.vim/plugin/filetype.vim, in filetype.vim, we can do some settings.
+
+		if we specify // vim: ft=text in file, then vim will search and 
+	then execute:
+	/usr/share/vim/vim72/ftplugin.vim, 
+	then:
+	/usr/share/vim/vim72/ftplugin/text.vim,
+	then:
+	~/.vim/after/plugin/text.vim.
+
+	3. modeline has 2 forms:
+		such as:
+			// vim: ft=text
+			/* vim: set ft=text: */
+
+
+#############################################################################
+
+RHEL Configuration:
+
+	1. install acpi_call module
+	tar acpi_call-master.zip
+	cd acpi_call-master
+	make
+	cp acpi_call.ko /lib/modules/.../acpi
+	sudo depmod
+	sudo vim /etc/sysconfig/modules/acpi_call.modules
+		content:
+			#!/bin/sh
+			
+			if [ ! -c /sys/module/acpi_call ] ; then
+				exec /sbin/modprobe acpi_call >/dev/null 2>&1
+			fi
+	sudo chmod a+x /etc/sysconfig/modules/acpi_call.modules
+
+	2. replace rhel repo with centos repo
+	sudo rpm -qa | grep yum | xargs rpm -e --nodeps
+	sudo rpm -e python-iniparse
+
+	download python-iniparse, yum-metaparser, yum-3.xxx, and
+	yum-plugin-fastestmirror.xxx.
+
+	sudo rpm -i python-iniparse
+	sudo rpm -i yum-metaparser
+	sudo rpm -i yum-3.xxx yum-plugin-fastestmirror...
+	
+	sudo rpm -i Packagekit-...
+	
+	troubleshooting 'subscription manager':
+	sudo rpm -qa | grep subscription | xargs rpm -e --nodeps
+
+	copy CentOS repos, rpmforge repos, ... into /etc/yum/yum.repos.d/.
+	yum makecache
+
+	troubleshooting 'YumRepo Error: All mirror URLs are not using ftp, http[s]
+	or file': edit /etc/yum/yum.repos.d/*, change $basearch to x86_64, change
+	$releasever to 6.  then yum makecache, ok.
+	
+	download and import the gpg public key, yum will use it after downloading
+	and installing packages.
+
+	3. add thirdparty repos
+	rpmforge
+	epel
+	rmi
+
+	4. win+e, open places 'home'
+	edit->preferences->behavior->check on 'always open in browser window'.
+
+##############################################################################
+RHEL: dracut
+Ubuntu: update-initramfs
+
+dracut, update-initramfs will replace of mkinitrd to generate
+initramfs-<version>.img, but the kernel dump file is still the form
+initrd-...-kdump.img.
+##############################################################################
+RHEL httpd:
+
+1.
+run hostname: it displays localhost.localdomain, but in /etc/hosts, it wrote:
+127.0.0.1 localhost localhost.localdomain, localhost.localdomain should be 
+the alias of canonical hostname, but why 'hostname' cmd displays the latter one.
+
+actually, /etc/sysconfig/network, in this file, there's one configuration options,
+HOSTNAME=localhost.localdomain, so i think, priority of this file is larger than
+/etc/hosts.
+so edit /etc/sysconfig/network, change from localhost.localdomain to localhost.
+
+2. when making httpd autostart when system bootup, it says 'temporary failure
+in name resolution www.dev.com', i don't know why? i have add it into
+/etc/hosts, like:
+127.0.0.2 www.dev.com, but why?
+this failure occurs when i add 'Listen www.dev.com:80' in httpd.conf, so i
+changed it to 'Listen 127.0.0.2:80', but the failure is still there.
+
+there're several 'Listen' cmds in /etc/httpd/conf/httpd.conf, so i changed it
+to 'Listen 80', after this modification, httpd start normally.
+
+oh, i nearly forget, 'ServerName' must be unique.
+##############################################################################
+6. vim modeline
+
+##############################################################################
+RHEL install openshot
+
+1. Download the *latest* nux-dextop-release rpm from
+http://li.nux.ro/download/nux/dextop/el6/
+
+2. Install nux-dextop-release rpm:
+	rpm -Uvh nux-dextop-release*rpm
+3. Install openshot rpm package:
+	yum install openshot
+
+4. update your ffmpeg
+sudo yum install ffmpeg, ffmpeg will be updated because of the dependencies
+to nux-dextop.
+
+what a pity! openshot can't start successfully, ah, forget it!
+##############################################################################
+RHEL loglevel
+
+when rhel boots, it will generates an warning or error message on the console,
+just like 'pnp,...cannot evaluate crs 8', it is relevant to the acpi. i can't
+figure it out how to fix it, so i just disable the message output, how do
+realize it? 
+append loglevel=N to the kernel boot parameters to control which kind of
+messages can be logged. i set it to loglevel=3, then loglevel 3,4,5,6 will be
+logged.
+what is intereting is that rhel loglevel is contrary to the log4j.
+in rhel, higher priority loglevel has a lower number, for example, 3<4,
+loglevel 3 has a higher priority than loglevel4. when you set loglevel=3,
+messages of loglevel4 will also be logged.
+while in log4j, FATAL has a higher priority than INFO, when you set log level
+FATAL, messages of INFO will be ignored.
+##############################################################################
+RHEL generate splashimage *.xpm.gz
+
+there's a cmd tool called 'convert', it can convert an image to xpm format,
+for example:
+
+	convert palm.JPG 
+		-resize 640x480 -colors 14 -depth 16 -normalize -verbose palm.xpm
+then compress it:
+	gzip palm.xpm
+put 'palm.xpm.gz' to /boot/grub, and change the splash option in grub.conf.
+reboot to see the effect!
+##############################################################################
