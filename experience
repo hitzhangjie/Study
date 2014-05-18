@@ -2188,4 +2188,24 @@ exec vim, type ':help', it reports an error, 'no help for help.txt'.
 reinstall all vim relevant packages, then it will be solved.
 i think, maybe, this error is caused by bleachbit cleaning.
 ##############################################################################
+gnuplot
+using gnuplot to draw, such as drawing following functions:
+log2(x), x^0.5, x, x^2, x^3, 2^x, x!
 
+exec gnuplot, enter interactive mode:
+> set xrange [1:25]
+> set yrange [1:10000]
+>
+> log2(x)=log(x)/log(2)
+> plot log2(x) title 'log(n)'
+> replot x**0.5 title 'n^0.5'
+> replot x ttle 'n'
+> replot x**2 title 'n^2'
+> replot x**3 title 'n^3'
+> replot 2**x title '2^n'
+> set sample 25
+> replot floor(x)! title 'n!'
+>
+> set yrange [1:500]
+> replot
+##############################################################################
