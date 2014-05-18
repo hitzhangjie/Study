@@ -2197,6 +2197,7 @@ exec gnuplot, enter interactive mode:
 > set yrange [1:10000]
 >
 > log2(x)=log(x)/log(2)
+> set sample 1000
 > plot log2(x) title 'log(n)'
 > replot x**0.5 title 'n^0.5'
 > replot x ttle 'n'
