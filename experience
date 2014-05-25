@@ -2214,3 +2214,53 @@ exec gnuplot, enter interactive mode:
 ##############################################################################
 file cmd, can be used to determine file type.
 ##############################################################################
+install Gnu binutils to operate binary files, such as we can use 'readelf' cmd
+to read and display elf part of Binary Object Files.
+##############################################################################
+install gtk+-2.24.23.
+
+recently, i found a very good programme named gtkqq on github, i want to study
+it and the webqq protocol.
+so i clone it, but when i build it, i found there's no apropriate gtk+
+installed. it requires at least gtk+-2.24.23, rhel 6.5 has gtk+-2.20.1
+installed, and there's no proper rpm package to install, i have to manually
+installed from the source.
+
+from the INSTALL file of gtkqq, we know it needs following prerequisites:
+	1)glib 2.28.0					: manually install
+	2)pango 1.20					: rhel repo
+	3)atk 1.29.2					: manually install
+	4)gdkpixelbuf 2.21.0			: manually install
+	5)cairo 1.6.0					: rhel repo
+	6)gobject-introspection 1.6.0	: rhel repo
+
+	please install the prerequisites as the listed order mentioned above, when
+	installing, maybe some other packages you should install.
+
+	after 1)-6) has been installed, configure your .bashrc to export
+	environment variable:
+	PKG_CONFIG_PATH=/opt/gtk/lib/pkgconfig:$PKG_CONFIG_PATH 
+	LD_LIBRARY_PATH=/opt/gtk/lib:$LD_LIBRARY_PATH
+	export PKG_CONFIG_PATH
+	export LD_LIBRARY_PATH
+
+	then configure\make\make install gtk+-2.24.23.
+
+	ok, gtk is installed successfully, and gtkqq is compiled successfully, but
+	it can't run successfully.
+
+##############################################################################
+configure ANT_HOME env var.
+
+my rhel has installed eclipse IDE from repo, and ant is installed with
+eclipse. version of ant is 1.7.1, but i want to install a higer version of
+ant, so i download 1.9.4 from apache offical site, then i unpack it to
+/opt/apache/ant, and add /opt/apache/ant/bin to PATH env var.
+i am sure /opt/apache/ant/bin appears before the /usr/bin, so i am sure
+/opt/apache/ant/bin will be run when i type ant in terminal. but when i type
+'ant -version', it still output 1.7.1, but i can see /opt/apache/ant/bin/ant
+has been run with the help of cmd 'hash', so i use strace to trace the open
+files, i find it open /etc/ant.conf to read ANT_HOME var's value, i realized
+maybe i have to configure ANT_HOME env var in ~/.bashrc, after i did that, it
+works.
+##############################################################################
