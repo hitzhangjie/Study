@@ -582,6 +582,19 @@ note:
 	sudo apt-get install oracle-java7-installer
 
 	You can check the java version by searching java in dashboard
+
+##############################################################################
+
+	install oracle jdk
+
+	i found a new method, you can leaving openjdk* there, and just download
+	the oracle jdk from oracle offical site, then unpack it to
+	/usr/local/share/jdkxxxx, then you change work directory to that directory,
+	and execute:
+		'for item in 'ls .'; do update-alternatives --install /usr/bin/$item
+		$item /usr/local/share/jdkxxx/bin/$item 10000; done'
+	over!	
+
 ##############################################################################
 
 	eclipse can't load swt relevant libraries
