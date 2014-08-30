@@ -719,6 +719,8 @@ note:
 	df : report disk usage of filesystem
 	du : report disk usage of file
 
+	fuser 8080/tcp, can list ther processes that listening on 8080 port.
+
 ##############################################################################
 
 	remove dir,cmd 'rm' or 'rmdir'
