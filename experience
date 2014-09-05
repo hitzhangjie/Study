@@ -618,10 +618,16 @@ note:
 	take effect until next boot.
 ##############################################################################
 
-	ssh/telnet to login in remote server
+	ftp/ssh/telnet to login in remote server
 	
+	ftp: need ftp/ftpd to be installed, and its' configuration is within
+	/etc/inetd.conf and is controlled by /etc/init.d/openbsd-inetd.
+
 	ssh: need sshd running,install openssh-server to make it.
 		 login remote server: ssh username@ip-server
+		 to configure ssh client/server, edit the conf file within
+		 /etc/ssh/ssh_config and /etc/ssh/sshd_config.
+
 	telnet: need telnetd running,install openbsd-inetd
 		 login remote server: telnet username@ip-server
 	
