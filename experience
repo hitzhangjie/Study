@@ -2285,3 +2285,12 @@ files, i find it open /etc/ant.conf to read ANT_HOME var's value, i realized
 maybe i have to configure ANT_HOME env var in ~/.bashrc, after i did that, it
 works.
 ##############################################################################
+
+vim, change from lowercase to uppercase:
+1)enter visual mode and select text
+2)U/u
+
+vim, jump to the matched brace: %
+
+##############################################################################
+
