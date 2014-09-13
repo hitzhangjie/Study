@@ -1,0 +1,581 @@
+=============================================================================
+2014-04-22
+=============================================================================
+
+ipAddrTable里面读取端口的ip地址ipAdEntAddr，其中ipAdEntIfIndex是个索引，对应着
+ifIndex里面的索引，所以现在给端口加上ip地址也是很容易做的了
+
+需要修改的地方：
+发送snmp请求的时候，添加oid到最后，请求该表ipaddrtable
+将响应结果保存到一个table里面
+在处理if相关请求的时候，索引值不再这个table里面保存的就可以删除了
+
+
+线路的话，需要参考ipRouteTable，获取ipRouteType为direct类型的记录，然后提取其
+中的ipRouteNextHop，再依赖其中的索引建立与ifTable的关系，再建立与ipAddTable中
+ipAdEntIfIndex的关系，三张表就建立了练习，这样就可以建立线路的
+概念。
+
+之前的获取table的方法在判断是不是同一行的时候有错，已改正！！！！
+
+=============================================================================
+2014-04-21 11:05
+=============================================================================
+
+c盘被写满？？？？Linux 特性： 充分利用物理内存，加快数据访问
+
+在Linux中经常发现空闲内存很少，似乎所有的内存都被系统占用了，表面感觉是内存不
+够用了，其实不然。这是Linux内存管理的一个优秀特性，在这方 面，区别于 Windows的
+内存管理。主要特点是，无论物理内存有多大，Linux 都将其充份利用，将一些程序调用
+过的硬盘数据读入内存，利用内存读写的高速特性来提高Linux系统的数据访问性能。而
+Windows 是只在需要内存时，才为应用程序分配内存，并不能充分利用大容量的内存空间
+。换句话说，每增加一些物理内存，Linux 都将能充分利用起来，发挥了硬件投资带来的
+好处，而Windows只将其做为摆设，即使增加8GB甚至更大。
+
+Linux 的这一特性，主要是利用空闲的物理内存，划分出一部份空间，做为 cache 和
+buffers ，以此提高数据访问性能。
+
+页高速缓存(cache)是 Linux内核实现的一种主要磁盘缓存。它主要用来减少对磁盘的I/O
+操作。具体地讲，是通过把磁盘中的数据缓存到物理内存中，把对磁盘的访问变为对物理
+内存的访问。
+
+磁盘高速缓存的价值在于两个方面：第一，访问磁盘的速度要远远低于访问内存的速度，
+因此，从内存访问数据比从磁盘访问速度更快。第二，数据一旦被访 问，就很有可能在
+短期内再次被访问到。
+
+=============================================================================
+2014-03-29 15:28
+=============================================================================
+1，移除成功或者失败，有影响吗？
+2，计算带宽相关的指标，需要利用到当前传输率
+ifSpeed，表示的事bps
+3，计算2，首先需要计算数据传输率，传输率的计算应该与上次访问时的差值进行计算，
+不能利用休眠的方式，这样不好
+
+计算全双工、半双工模式下总带宽利用率不同，入带宽和出带宽利用率的计算没有区别：
+半双工模式下：
+bwUsed = (ifInOctets+ifOutOctets)*8*100/(timePassed*ifSpeed), timePassed是
+seconds，*100是转成百分比，ifSpeed单位是bps，所以*8.
+
+全双工模式下：
+bwUsed = max(ifInOctes,ifOutOctets)*8*100/(timePassed*ifSpeed)
+
+
+snmp好像无法判断是全双工还是半双工，如果使用半双工的进行计算，并且带宽利用率超
+过了100，那么可以肯定的是，这是一个全双工的。
+
+
+本机测试的时候，使用半双工的公式进行计算，发现带宽使用率超过了100，可以断定该
+网卡是全双工的，所以程序里面改为使用全双工的公式进行计算，权宜之计啊。
+
+
+4.
+
+=============================================================================
+2014-03-24 23:41
+=============================================================================
+oracle安装时，可以选择只安装数据库软件，不安装数据库，这样可能会好一点；
+
+安装后，利用database configuration manager选择安装数据库，类型为一般用途的数据
+库；
+
+安装后，数据库里面还没有表，oracle是所有的用户都可以连接到某个数据库，但是能不
+能在该数据库下创建表，是由权限决定的，我们创建个用户create user ... identified
+by ...，这个时候还不能用该用户连接数据库，因为数据库还没有设置监听器
+
+用net configuration assistant配置监听器
+
+刚创建的用户没有权限，无法进行正常操作，用system连接后，授予新创建的用户必要的
+权限：
+grant connect,resource,dba to username;
+
+然后用新创建的用户连接数据库，创建的表就归该新创建的用户所有；
+
+=============================================================================
+2014-03-07 20:19
+=============================================================================
+
+1 超出游标的最大数量：stmt.close()，并且应该放在try-catch块中；
+2 使用聚集函数max()时，对应的列不允许为空，否则出错；
+3 java.util.ConcurrentModificationException
+jdk中介绍说，如果当对一个集合进行遍历的时候，存在另一个线程对同一集合对象进行
+修改，（遍历的线程和修改的线程可以是同一个线程），那么就会抛出该异常。
+
+例如：for(MyObject obj : ArrayList<MyObject> list) {
+	               list.remove(obj);
+				             }
+因为迭代代码中对list进行了修改，那么迭代器就会收到影响，如果继续往下迭代的话，
+就会抛出并行修改异常；
+如果对上述代码做如下修改：
+for(MyObject obj : ArrayList<MyObject> list) {
+	       list.remove(obj);
+		          break;
+}
+注意，添加了一行break，虽然上述修改操作影响了迭代器，但是由于修改后我们立即调
+用了break，不会继续迭代下去，所以即便迭代器受影响，也不会导致迭代错误，因此便
+不会抛出并行修改异常。
+
+=============================================================================
+2014-03-05 13:17
+=============================================================================
+devicetag, oid, value
+对于非表格数据，没有问题；
+对于表格型数据，全部存储到value中，value中都是<oid,value>的值对，需要自己处理
+；或者，将表格型数据拆分成多个oid，value的记录行插入，但是这样比较耗时间。
+
+或者每个设备单独一张临时数据表。
+
+5分钟10分钟，插入一个字段，即时间粒度
+
+oid， descr ，oid
+找一个类库，实现从oid到descr的转换
+
+indexnametab存储指标oid与名称的映射关系；
+
+deviceindextab存储设备要监控的指标；
+
+hostindextab存储监控的主机的指标；
+networkindextab存储监控的网络设备的指标；
+storageindextab存储监控的存储设备的指标；
+
+=============================================================================
+2014-02-19 16:25
+=============================================================================
+1.交换机，背板交换能力
+路由器没有背板交换这个概念，这个是交换机的概念
+现在很多路由器带交换功能，或者是三层交换机，所以也有了背板交换这个概念
+你说的路由器背板交换能力等同于交换机的背板带宽
+交换机的背板带宽，是交换机接口处理器或接口卡和数据总线间所能吞吐的最大数据量。
+背板带宽标志了交换机总的数据交换能力，单位为Gbps，也叫交换带宽，一般的交换机的
+背板带宽从几Gbps到上百Gbps不等。
+
+=============================================================================
+2014-02-19 15:55
+=============================================================================
+数据库名orcl    i 用户名CHINASTA    密码CHINASTA
+
+devicetab.devicetag char(16), 
+idctab.devicetag varchar(16),
+当两个字段的值相同时，占据的空间并不一定相同，所以sql中比较的时候，两个字段可
+能是不相同的，为此，将其idctab表中的devicetag字段修改为char(16)，在networktab
+以及storagetab中也要做想相同的修改。
+
+timer.schedule(new MyTask(), delay, interval),其中，MyTask的构造函数仅仅被调用
+一次，run方法被周期性调用。
+
+检查表devicetab上一次的修改日期：
+select scn_to_timestamp(max(ora_rowscn)) from devicetab
+
+CCS should only pay attention to access data, how to response is considered by
+CFS
+
+String clientID = rs_oneGroup.getString("clientid");
+String deviceinfo = 
+	deviceTag+":"+deviceIP+":"+deviceType+":"+interval+":"+clientID;
+
+timer.cancel()，之后必须重新new一个再可以
+timer.purge()，好像不是完全移除所有的调度
+
+oracle异常，打开的游标数超过了最大值。
+根本的解决方法是在createStatement之后，当不需要其中的结果集ResultSet时，应该立
+即关闭该对象。
+
+devicetab中插入100行记录进行测试
+
+修正sendGetTableRequest中，null pointer错误，具体情况是，当通过getbulk请求将信
+息转换成table中的行时，有的行其实可能是null，通过null填充的这些行，当有数据需
+要填充到现在已经存在的某行时（可能为null），如果该行为null就会出错。
+
+但是，往现存的行里插入数据时，一般不会出现这种情况，究竟会不会发生，可能跟
+snmpget bulk返回的数据并不是按行的顺序发回来的。
+没道理？需要详细调试一下sendGetTableRequest函数和sendGetBulkRequest函数。
+
+task.cancel()并没有立即结束task里面的线程，还需要一定的时间才能终止下来。
+
+=============================================================================
+2014-02-09 09:31
+=============================================================================
+
+
+va2wsdl -cn classname   ----> class is *.class filename not including
+								extension name
+wsdl2java -uri wsdlfilename
+
+pojo deployment
+/usr/local/apache/tomcat-8.0.1/WEB-INF/axis2/WEB-INF/services/YourWSProject
+structure of YourWSProject:
+YourWSProject
+|-----> META-INF
+|        |-----> services.xml
+|-----> classes
+         |---> level-1-package
+		                |---> level-2-package
+						                      |----> ....
+					                                  |----> *.class
+jar cvf *.aar META-INF/ classes/
+then copy it to
+/usr/local/apache/tomcat-8.0.1/webapps/axis2/WEB-INF/services/*.aar.
+
+localhost:8080/axis2/services/listServices
+localhost:8080/axis2/services/StockQuoteService?wsdl 
+localhost:8080/axis2/services/StockQuoteService?xsd
+
+=============================================================================
+2014-02-03 07:58
+=============================================================================
+1 目前关于SNMP的开发包主要有NET-SNMP(for C)、SNMP++(for C++)、SNMP4J(snmp++的
+JAVA版本)、SNMPJ（NET-SNMP的JAVA版本）。
+
+=============================================================================
+2014-02-02 02:03
+=============================================================================
+How Does SNMP Agent Works ?
+The following steps outline how a third-party SNMP management console
+application returns information from the SNMP service:
+1. The SNMP management console application formulates an SNMP message based on
+input from the user. The message includes a protocol data unit (PDU) and
+authentication information. The management console application can use the
+Microsoft SNMP Management API library (MGMTAPI.DLL) or the Microsoft WinSNMP
+APIlibrary (WSNMP32.DLL) to perform this step.
+2. The SNMP management console application sends the SNMP message to the SNMP
+service, using the SNMP service libraries.
+3. The SNMP service receives the request. It verifies the authentication
+information and the source IP address.
+4. The SNMP service selects the appropriate extension agent and requests that
+the agent retrieve the requested information.
+5. The SNMP service sends the response to the SNMP management console
+application.
+
+Which SNMP Version Should You Pick ?
+Pick the best one for your situation of course! Some helpful starting hints
+though:
+If entirely using Net-SNMP products, or products that support TLS: use SNMPv3
+over (D)TLS.
+If talking to legacy SNMPv3 devices: use SNMPv3/USM.
+If talking to SNMPv1/SNMPv2c only devices: call the vendor and complain!
+Seriously.
+
+HOST-Windows OS:
+Windows Vista / Windows Server 2008 support SNMPv1 / SNMPv2c.
+Either Windows Server 2003 or Windows Server 2008 doesn't support SNMPv3.
+
+using MG-SOFT SNMP Master Agent, SNMPv3 can be simulated on Windows OS.  The
+major advantage of MG-SOFT SNMP Master Agent over Microsoft SNMP service is
+that along the SNMPv1 and SNMPv2c protocols implemented in Microsoft SNMP
+service, it also implements the secure SNMPv3 protocol, offering strong
+authentication and SNMP packets content encryption, compliant with the current
+SNMP protocol standard published by IETF.
+
+MG-SOFT SNMP Master Agent implements SNMP extension API interface compatible
+with Microsoft SNMP extension API, which means that all SNMP sub-agents
+designed and implemented to run under Microsoft SNMP service will continue to
+run also under MG-SOFT SNMP Master Agent, the same sub-agent binaries, without
+a need to modify or recompile them.
+
+MIB:
+some MIB files are installed with the SNMP service on Windows OS. There're
+some other MIBs.
+Typically, you can copy a MIB from the SNMP extension agent that supports the
+particular MIB. Some additional MIBs are available with the Windows NT 4.0
+Resource Kit.
+
+=============================================================================
+2014-01-22 19:48
+=============================================================================
+d1.windows如何配置发送trap消息
+
+2. stat.execute("select * ...");
+   rs = stat.getResultSet();
+注意rs只是一个结果集的引用，而这个结果集与stat紧密相关，当stat执行了另一条语句
+之后，结果集中的内容被改变，rs之前引用的结果集已经不存在了，或者说内容已经被改
+变了。
+
+	碰到这种问题，可以利用conn创建多个statement对象，分别执行对应的sql语句。
+
+3. 程序中与oracle中数据类型的对应，昨天碰到的问题都是因为字段类型不匹配引起的
+。适当调整oracle中字段类型。idctab，networktab, storagetab
+
+4. 数据库表devicelisttab被修改后，程序可以建一个子线程用于
+：检测表是否被修改过
+：取消定时器timer
+：重新创建Capture类并调用start方法
+
+该线程在main方法中创建，用于检测数据库表devicelisttab是否被修改（如何检测）？
+
+如果表被修改，线程删除之前创建的Capture对象，并重新创建该对象，并调用start方法
+，重新开始采集过程。
+
+
+=============================================================================
+2014-01-21 12:51
+=============================================================================
+1.java创建daemon进程，问题所在？java由于自己平台独立性的考虑，不会向操作系统陷
+得太深。这也带来某些不便之处，例如当我们希望创建一个daemon线程（daemon在
+windows下面通常称为service），如果我们利用c++的话，或者说利用mfc的话，创建一个
+daemon线程是很容易的，因为mfc中内置了对注册表的访问，通过修改注册表的键值，将
+一个进程注册为服务进程，
+local_current_machine->system->currentcontrolset->services。
+
+但是java由于自己平台独立性的考虑，不会有mfc那样的功能，如果想将一个java程序作
+为windows或者linux等系统下的daemon进程来运行，必须借助其他手段，将其注册为系统
+的daemon进程。
+
+2.常用的辅助工具有哪些？
+常用的将java程序转换为系统daemon进程的工具有：
+1）JSL，java service launch 
+2）JSW，java service wrapper 
+3）Apache Commons Daemon。
+
+3.Apache Commons Daemon组成
+Apache Commons Daemon主要包含两个组件：
+1）与操作系统进行交互的接口，这部分是用C写的 
+2）作为Daemon API的部分，这部分是用java写的
+
+wiki上解释，Apache Commons Daemon有两种使用方法：
+1）实现Daemon接口，tomcat-4.1.x就是实现了daemon接口
+2）通过提供包含启动函数和停止函数的类方法，并由procrun或者jsvc调用
+
+关于第二种使用Apache Commons Daemon的方法：
+1）windows操作系统下面可以选择procrun，它包含两个工具，一个是prunsrv,一个事
+prunmgr。前者用于将java程序转换为一项windows服务，后者用于调整服务运行时的参数
+。
+需要注意的一点是，当将一个java程序作为一项服务进行安装后，在启动时，通常会失败
+！原因是默认的jre与系统环境不符，比如在x86_64系统中，默认的jre仍然是32位的，这
+就需要更改服务的运行参数。参数的修改在SCM（Service Control Manager）中进行修改
+有点不方便，直接运行Apache提供的prunmgr.exe（此时，这里的prunmgr.exe假定已经被
+重命名为YourServiceNamew.exe）中进行修改。
+具体地说，就是将prunmgr.exe中java标签页下面java virtual machine选项从：
+C:\Program Files (x86)\Java\jre7\bin\client\jvm.dll，
+修改为：
+C:\Program Files\Java\jre8\bin\server\jvm.dll。
+2）linux系统下面可以选择jsvc，我暂时没有用，不过，工程在windows系统上试运行成
+功后，就是linux系统试运行，jsvc很快也会用到。
+
+4.Apache Commons Daemon，对即将被安装位windows服务的java程序的要求
+由于我们在将java程序作为一项服务进行安装时，需要指定启动类、启动函数，停止类、
+停止函数，我们可以将同一个类指定为启动类、停止类，当然也可以将同一个函数指定为
+启动函数、停止函数，只要它们能够完成服务启动、停止的操作就可以。
+但是，通常情况下，我们可以指定一个类，既作为启动类，又指定为停止类，但是在类里
+面实现两个函数，start和stop，这两个函数分别作为服务的启动入口和服务的结束入口
+。
+只要start函数一直在运行（while循环），我们就说服务处于运行状态。
+
+5.以下是一个不错的实例：
+http://developeriq.in/articles/2012/may/01/transforming-java-programs-into-windows-services-u/
+
+6.windows中shell变量的引用%VAR%
+7.服务的安装与删除
+假定我们写了一个文件SquareServer.java，其中包含一个类SquareServer，类方法中包
+含start，stop，现在将它们拷贝到桌面C:\Users\Zhangjie\Desktop，同时也讲
+prunsrv.exe与prunmgr.exe拷贝过来，并分别更名为SquareServer.exe与
+SquareServerw.exe。
+1）安装
+C:\Users\ZhangJie\Desktop>
+SquareServer.exe //IS//SquareServer --Description="SquareServer" 
+	--Install=%CD%\SquareServer.exe --Jvm=auto --Classpath=%CD% 
+	--StartMode=jvm --StartClass=SquareServer --StartMethod=start 
+	--StopMode=jvm --StopClass=SquareServer --StopMethod=stop 
+	--LogPath=%CD%\logs --StdOutput=auto --StdError=auto --Startup=auto
+2）删除
+C:\Users\ZhangJie\Desktop>
+SquareServer.exe //DS//SquareServer
+3）服务安装之后，注意修改默认的jre，例如在win7 x64下从32位jre修改为64位jre。
+4）编写测试用的SquareClient.java，并编译运行，client向1）中安装的服务发送请求
+，例如发送正方形的边长，运行的服务收到请求后，将计算结果返回给当前client。
+
+
+=============================================================================
+2014-01-21 12:51
+=============================================================================
+sqlplus username/password@host[:port][/dbname]
+
+exp user/pass@host[:port]</dbname> file=*.dmp full=y/n
+imp ...
+
+=============================================================================
+2014-01-21 12:51
+=============================================================================
+
+1.采集哪些设备的数据？
+毛老师那边应该是指定设备的信息，并通过接口发送给我这边，例如毛老师将设备的信息
+封装到xml文件中，发送给我。我这边收到后将xml文件加载入内存。并对xml文件进行解
+析，提取出需要采集的设备信息以及需要的相关采集的信息。
+
+这里的接口，通过web service实现。毛老师那边第一次向我这边请求数据时，应该发送
+完整的设备信息，之后可以通过增量添加、删除的方式。这可以通过不同的接口指令来完
+成。
+
+2.每台设备的采集频率不同？
+对于不同的设备，采集频率可以是不同的，这可能跟设备的重要程度等相关。设备的采集
+频率是可以调节的，这个调节，由毛老师那边发起请求，我这边收到请求后，调整对指定
+设备的采集频率。
+
+对指定设备的调整，或者对指定设备的添加、删除可以通过增量添加、删除的方式进行，
+不用每次发送所有设备的信息。这要求，提供相应的指令。
+
+3.我这边对设备数据采集的实现？
+因为设备有上千台之多，不可能像现在这样串行的逐个的对设备进行查询，这样效率太低
+，轮训一次耗时太长。需要利用多线程来对多台设备进行访问。
+
+为了提高采集效率：
+1）对于采集频率相同的设备，可以把对这些设备的数据采集组织为同一个任务，这样因
+为有众多采集频率不一样的设备，我们就会拥有众多的任务。我们对不同的任务，用不同
+的线程进行处理。
+2）一个任务中有可能有很多设备，对于这些不同的设备，我们也采用多线程进行处理。
+考虑到采集效率与线程数量之间的平衡问题，我们可以创建一定数量的线程，让每一个线
+程负责采集5台设备，或者10台设备。如何确定这个值，我们可能要根据实验进行调节，
+最终达到，在指定时间内（例如10秒以内）采集完所有数据的指标。
+
+4.我这边对毛老师那边相关指令的响应？
+1）毛老师那边发送给我这边的指令，大致有如下几种：
+
+
+cap_start    @
+add_device   @ID,type,number,ip[,interval] ... \ ___ ip may change, number won't
+del_device   @ID,type,number ...               /
+add_index    @ID,type,number,indexname1,...
+del_index    @ID,type,number,indexname1,...
+adjust_device @ID,type,number,[ip ipAddress][int intervalValue]
+cap_end       @ID
+
+2）接收到上述指令后，ccs应作出的响应
+
+①接收到cap_start指令，表示第三方开发人员向ccs发起了设备数据采集的请求，ccs为每
+一个第三方开发人员分配一个ID，该ID唯一，用来标识对应的第三方开发商。ccs创建一
+张表ID_TABLE，来维护已经分配的ID。
+
+step1:
+ccs为每个开发商分配一个ID，并在ID_TABLE插入一条记录
+step2:
+用这个ID建两个临时表${ID}_DEVICE，${ID}_INDEX.
+// 需要采集的设备列表
+create table ID_DEVICE (
+	id           integer not null,
+	deviceNumber integer not null,     // 设备编号
+	type         integer not null,     // 0:host,1:storage,2:network
+	ip           varchar(16),          // ip地址是可变的，设备编号是不变的
+	interval     integer  default min_interval   // 采集周期
+) primary key(id);
+// 针对每台设备，需要采集的指标
+create table ID_INDEX (
+	id           integer not null,
+	indexname    varchar(64),          // 待采集指标名称
+	deviceNumber integer,              // 待采集设备编号（采集某台设备上的某些指标）
+)primary key(id), foreign key(deviceNumber);
+step3:
+ccs完成相应的初始化工作后，返回cap_initialized指令，表示ccs完成初始化，开发人
+员可以发送后续指令。同时，ccs会将可以监控的指标名称返回给开发人员，供其选择。
+
+②接收到add_device指令后，ccs向待采集设备列表ID_DEVICE中添加开发人员指定的设备
+。
+
+可能存在这样的情况，多个开发人员请求了对同一个设备的数据采集，并且对该设备的采
+集频率可能也不一样。ccs不应该针对每一个开发人员的请求，都发起对数据的访问，这
+样的话，会大幅增加设备的负载。
+
+QA-1：ccs对设备的采集频率，如何设定？
+为了能够快速响应开发人员的请求，同时又避免对设备的过于频繁的访问，ccs采取一种
+折衷的方法。即ccs可以设定一个一个最小采集周期min_interval，第三方开发人员的采
+集周期不得小于min_interval。而这个min_interval可以由最终的ccs管理员，根据需要
+进行设定。这样ccs对设备的访问就是相对固定又可调节的，对设备来讲，在一定程度上
+减少了ccs snmp访问带来的负载。
+
+ccs必须暂时将采集到的数据，存储到数据库中。
+QA-2：那么对开发人员的响应呢？
+对开发人员的响应，由于各个开发人员期望的采集频率不同，需要不同的定时器，定时返
+回对应的设备数据。返回数据的时候，查数据库返回数据。
+为了减少定时器数量（减少因为定时而分配的线程数量，减少与数据库服务器建立连接所
+耗费的资源），使采集周期相同的设备共用同一个定时器，定时器超时的时候，检查
+ID_TABLE、ID_DEVICE和ID_INDEX，将设备指标发送给第三方开发人员。
+③接收到del_device，从ID_DEVICE中删除指定设备，同时级联删除ID_INDEX中的对应设备
+指标
+④接收到add_index，在ID_INDEX中添加指标
+⑤接收到del_index,从ID_INDEX中删除指标（即使ID_DEVICE中的设备在ID_INDEX中没有指
+标，也不删除，这在开发人员调整待采集指标时，某台设备上没有指定指标的情况是可能
+发生的）
+⑥接收到adjust_device，根据新参数值更新ID_DEVICE
+⑦接收到cap_end，删除ID_DEVICE，删除ID_INDEX
+...
+这些指令可以自己定义报文格式实现，或者直接就是通过xml文件来存储上述指令。
+ccs这边对毛老师那边数据的响应，与之类似。
+毛老师那边用的php，我用的java，不同的应用、平台之间的交互，可以通过web service
+。web service有几种不同的访问方式，我暂时不清楚，传递数据时行不行得通。
+
+=============================================================================
+2014-01-20 23:55
+=============================================================================
+for java:
+POJO (axis2, the easiest)
+AXIOM
+AXIS2 databinding framework
+XMLBeans
+JiBX
+
+AXIS2下部署，要么组织成目录结构的方式，要么组织成*.aar格式的文件。
+具体地说，就是将该目录结构（ant生成的classes下的所有文件）或者aar文件，存储到
+tomcat\webapps\axis2\webapp\WEB-INF\services下面
+
+而pojo的部署，只是将*class文件放置在tomcat\webapps\axis2\webapp\WEB-INF\pojo中
+，这样tomcat重启之后就会自动完成部署。
+
+为了访问web service，客户端程序，需要通过访问web service对应的wsdl文件，获知服
+务提供的操作等等信息。
+当然了，我们服务端的web service也需要在wsdl文件中注册。
+
+一般，为了加速开发，可以先写出服务端java代码，然后利用axis2提供的java2wsdl文件
+生成wsdl，之后我们可以利用wsdl2java生成对应的服务端代码（不用了，我们已经写了
+）和客户端代码（方便测试）。
+
+=============================================================================
+2014-11-20 22:43
+=============================================================================
+Net-SNMP package allows us to extend the functionality by executing custom
+commands on the managed server to collect their exit code and output
+
+snmptranslate -On objectName(Top::branch)
+	        : translate objectName to oid value
+snmptranslate -Tp -IR branchName
+	        : list the branch in the form a tree
+
+
+1) extend / extend-shell
+			:  snmp agent capture the exit code and output, and return them to
+			the manager
+
+extend --> previous exec, fork and execute the cmd
+extend --> previous extend, execute the cmd via sub-shell
+
+
+extend oidName/Name cmdFullPath Arguments
+snmpwalk -v2c -cpublic localhost NET-SNMP-EXTEND-MIB::nsExtendOutputFull
+
+snmptable -v2c -cpublic localhost NET-SNMP-EXTEND-MIB::nsExtendOutput1Table    
+		: nonline-based output
+snmptable -v2c -cpublic localhost NET-SNMP-EXTEND-MIB::nsExtendOutput2Table    
+		: line-based output
+
+=============================================================================
+2014-11-20 22:42
+=============================================================================
+tkmib, sudo apt-get install tkmib, it is a mib browser.
+
+=============================================================================
+2014-11-19 16:33
+=============================================================================
+after snmp/snmpd installed, you need to install snmp-mibs-downloader then run
+'sudo download-mibs' to download them
+
+if you want to access normally through snmp manager or your own snmp4j
+implemented manager, /etc/snmp/snmpd.conf must be configured
+
+/etc/snmp/snmpd.conf : is used to configure net-snmp agent 'snmpd'
+/etc/snmp/snmp.conf : is use to configure mibs that can be loaded.
+
+if line 'mibs:' is not commented out, that means no mibs will be loaded by
+default for license reasons, no mibs will be loaded, so you should comment
+this line
+
+net-snmp has two-running daemons: snmpd+snmptrapd
+snmpd.conf:
+snmpconf -g basic_setup
+
