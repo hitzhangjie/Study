@@ -2477,6 +2477,8 @@ every thing goes ok!
 
 ##############################################################################
 
-
+in VirtualBox, don't use left ctrl key as the host key, if you do that,
+ctrl+c,ctrl+\,ctrl+d signal will not be generated and sent to the guest
+terminal. you can try left win as the host key instead of right ctrl.
 
 
