@@ -19,7 +19,7 @@ auto varname = varvalue;
 变量auto会根据初始化时初值varvalue的类新，自动指定varname的类型；
 
 decltype(varname)可以获取变量varname的类型，例如可以这样使用：
-	decltype(oldvar) newvar；
+    decltype(oldvar) newvar；
 这样变量newvar与新变量oldvar是相同的类型，decltype主要是用于模板中根据模板参数
 的类型创建其他相同变量。
 
@@ -53,17 +53,17 @@ l/L表示long double类型；
 译器有关。
 
 字符常量、字符串常量'x',"xxxxx"，注意一些特殊的转义字符，例如：
-\n	newline
-\r	carriage return
-\t	tab
-\v	vertical tab
-\b	backspace
-\f	form feed (page feed)
-\a	alert (beep)
-\'	single quote (')
-\"	double quote (")
-\?	question mark (?)
-\\	backslash (\)
+\n    newline
+\r    carriage return
+\t    tab
+\v    vertical tab
+\b    backspace
+\f    form feed (page feed)
+\a    alert (beep)
+\'    single quote (')
+\"    double quote (")
+\?    question mark (?)
+\\    backslash (\)
 转义字符的输出还可以通过\后加八进制数字或者十六进制数字的形式进行，八进制数字
 直接加在\后面，十六进制数字需要在\后面加个x，然后再加上对应的十六进制数字，如
 下： 
@@ -105,18 +105,18 @@ Mon Sep  8 01:48:59 CST 2014
 
 通过模板参数来定义类和函数，可以适用于多种类型，增强适应性。模板参数的声明形式
 为：
-	template <class T1, class T2, ..., class T3>
-	T3 func(T1 t1, T2 t2, ..., T3 t3) {
-		return (T3)xxx;
-	}
+    template <class T1, class T2, ..., class T3>
+    T3 func(T1 t1, T2 t2, ..., T3 t3) {
+        return (T3)xxx;
+    }
 上面只是举了一个简单的例子，注意模板参数中的class可以用typename代替。
 
 命名空间的使用实例。
 1）定义一个命名空间：
-	namespace my 
-	{
-		int a,b;
-	}
+    namespace my 
+    {
+        int a,b;
+    }
 2）使用一个命名空间：方式1是通过{using namespace my; cout<<a<<b;}，方式2是通过
 cout<<my::a<<my::b；
 
@@ -147,11 +147,11 @@ Tue Sep  9 00:37:56 CST 2014
 =============================================================================
 
 关于const修饰的是指针还是值的问题，请参见如下形式：
-		  int x;
-		  int *       p1 = &x;  // non-const pointer to non-const int
-	const int *       p2 = &x;  // non-const pointer to const int
-		  int * const p3 = &x;  // const pointer to non-const int
-	const int * const p4 = &x;  // const pointer to const int 
+          int x;
+          int *       p1 = &x;  // non-const pointer to non-const int
+    const int *       p2 = &x;  // non-const pointer to const int
+          int * const p3 = &x;  // const pointer to non-const int
+    const int * const p4 = &x;  // const pointer to const int 
 可见const仅仅紧跟在其后的类型进行修饰。
 
 void类型表示没有类型或者没有指定类型，void*类型就可以指向任何数据类型，但是在
@@ -159,14 +159,14 @@ void类型表示没有类型或者没有指定类型，void*类型就可以指�
 
 type (*funcPtr)(type,type,type...)，定义了一个函数指针funcPtr，例如：
 int add(int a, int b) {
-	return a+b;
+    return a+b;
 }
 
 void main() {
-	int (*myadd) (int, int) = add;
-	int result = myadd(1,2);
+    int (*myadd) (int, int) = add;
+    int result = myadd(1,2);
 }
-		
+        
 pointer = new type
 pointer = new type [number]
 
@@ -191,7 +191,7 @@ c++中定义类型可以通过struct、typedef、using，其中struct允许嵌�
 typedef char C;
 typedef unsigned int WORD;
 typedef char * pChar;
-typedef char field [50];		// field == char[50]
+typedef char field [50];        // field == char[50]
 
 using new_type_name = existing_type;举例：
 using C = char;
@@ -213,9 +213,9 @@ public：可以被当前类、friend类、派生类、非派生类访问；
 则不被当作inline函数，这对编译器对代码进行优化时有影响。
 
 关于如何调用构造函数：
-new func(x,y,z);	// 传统函数式
-new func = x;		// 如果构造函数只包含一个参数
-new func {x,y,z};	// c++11中引入的统一式
+new func(x,y,z);    // 传统函数式
+new func = x;        // 如果构造函数只包含一个参数
+new func {x,y,z};    // c++11中引入的统一式
 
 对成员进行初始化可以在构造函数中进行，也可以在成员初始化器中进行。两者有所区别
 ，在对基本数据类型进行初始化的时候，通过构造函数和成员初始化器这两种方式并没有
@@ -242,24 +242,24 @@ Wed Sep 10 17:49:15 CST 2014
 寄存器中，如果返回值超出了eax寄存器的位宽呢？
 编译器是这么做的，假定有如下代码：
 struct num {
-	long long a;
-	long long b;
+    long long a;
+    long long b;
 };
 typedef num NUM;
 
 NUM add(NUM a, NUM b) {
-	NUM res;
-	res.a = a.a+b.a;
-	res.b = a.b +b.b;
-	return res;
+    NUM res;
+    res.a = a.a+b.a;
+    res.b = a.b +b.b;
+    return res;
 }
 
 main() {
-	NUM a,b;
-	a.a=100; a.b=100;
-	b.a=200; b.b=300;
-	
-	NUM c = add(a,b);
+    NUM a,b;
+    a.a=100; a.b=100;
+    b.a=200; b.b=300;
+    
+    NUM c = add(a,b);
 }
 看这段简单的代码，首先编译器知道了返回值要往c这个地方存储，并且也知道了NUM类型
 的返回值超过了寄存器的位宽，不可能保存在eax寄存器中。
@@ -313,8 +313,8 @@ delete    new[]     delete[]
 type operator sign (params);
 例如:
 Obj operator+ (Obj obj) {
-	....
-	return (Obj)objx;
+    ....
+    return (Obj)objx;
 }
 当重载完成之后，可以隐式地调用+这个函数，也可以显示的调用+这个函数，其形式分别
 为：
@@ -329,21 +329,21 @@ c = a.operator+(b);
 时候应该注意调用顺序。
 
 不同的运算符重载的时候的格式，汇总如下：
-Expression	Operator										Member function			Non-member function
-@a			+ - * & ! ~ ++ --								A::operator@()			operator@(A)
-a@			++ --											A::operator@(int)		operator@(A,int)
-a@b			+ - * / % ^ & | < > == != <= >= << >> && || ,	A::operator@(B)			operator@(A,B)
-a@b			= += -= *= /= %= ^= &= |= <<= >>= []			A::operator@(B)			-
-a(b,c...)	()												A::operator()(B,C...)	-
-a->b		->												A::operator->()			-
-(TYPE) a	TYPE											A::operator TYPE()		-
+Expression    Operator                                        Member function            Non-member function
+@a            + - * & ! ~ ++ --                                A::operator@()            operator@(A)
+a@            ++ --                                            A::operator@(int)        operator@(A,int)
+a@b            + - * / % ^ & | < > == != <= >= << >> && || ,    A::operator@(B)            operator@(A,B)
+a@b            = += -= *= /= %= ^= &= |= <<= >>= []            A::operator@(B)            -
+a(b,c...)    ()                                                A::operator()(B,C...)    -
+a->b        ->                                                A::operator->()            -
+(TYPE) a    TYPE                                            A::operator TYPE()        -
 
 c++类模板，形式大致如下：
 template <class T>
 class Obj {
-	T ...
-	T ...
-	T func(T t1, T t2, ...);
+    T ...
+    T ...
+    T func(T t1, T t2, ...);
 }
 指定类模板参数时除了可以使用class T，也可以使用typename T来代替。
 
@@ -395,9 +395,9 @@ T t(...);
 T{...};
 上述3中方式都是调用构造函数的方式，但是拷贝构造函数只有如下两种原型形式：
 T t1;
-T t2 = t1;	调用拷贝构造函数
-T t3(t1);	调用拷贝构造函数
-t2 = t1;	调用拷贝赋值函数
+T t2 = t1;    调用拷贝构造函数
+T t3(t1);    调用拷贝构造函数
+t2 = t1;    调用拷贝赋值函数
 需要注意上述几种形式的发生时间以及原型的区别。
 
 5）移动构造函数 Ex::Ex(Ex&&) || 移动赋值函数 Ex& Ex::operator= (Ex&&)
@@ -430,18 +430,18 @@ delete释放其所占用的堆内存的，在c++中应该尽力避免这样的�
 上面说了这么多，还没有说到移动构造函数、移动赋值函数诞生的原因，这两个特殊的函
 数参数都必须是匿名对象，我们看个例子。
 class Ex {
-	string * ptr;
-	Ex(string param) {
-		ptr = new string(param);
-	}
-	Ex(Ex&& t) {
-		this.ptr = t.ptr;
-		t.ptr = nullptr;
-	}
-	Ex& operator= (Ex&& t) {
-		this.ptr = t.ptr;
-		t.ptr = nullptr;
-	}
+    string * ptr;
+    Ex(string param) {
+        ptr = new string(param);
+    }
+    Ex(Ex&& t) {
+        this.ptr = t.ptr;
+        t.ptr = nullptr;
+    }
+    Ex& operator= (Ex&& t) {
+        this.ptr = t.ptr;
+        t.ptr = nullptr;
+    }
 }
 Ex a(Ex("xxx"));
 代码中首先首先创建了一个对象Ex("xxx")不过它是匿名对象，虽然创建的这个匿名对象
@@ -461,24 +461,24 @@ a = Ex("hello world");
 简单总结一下：
 
 c++中类的6种特殊的默认成员函数：
-成员函数名称				成员函数原型
-Default constructor			C::C();
-Destructor					C::~C();
-Copy constructor			C::C (const C&);
-Copy assignment				C& operator= (const C&);
-Move constructor			C::C (C&&);
-Move assignment				C& operator= (C&&);
+成员函数名称                成员函数原型
+Default constructor            C::C();
+Destructor                    C::~C();
+Copy constructor            C::C (const C&);
+Copy assignment                C& operator= (const C&);
+Move constructor            C::C (C&&);
+Move assignment                C& operator= (C&&);
 
 上面提到的这6个成员函数都是由c++隐式定义的，下面说一下这些隐式定义会执行哪些操
 作：
 
-隐式成员函数名称		条件																	操作
-Default constructor		if no other constructors												does nothing
-Destructor				if no destructor														does nothing
-Copy constructor		if no move constructor and no move assignment							copies all members
-Copy assignment			if no move constructor and no move assignment							copies all members
-Move constructor		if no destructor, no copy constructor and no copy nor move assignment	moves all members
-Move assignment			if no destructor, no copy constructor and no copy nor move assignment	moves all members
+隐式成员函数名称        条件                                                                    操作
+Default constructor        if no other constructors                                                does nothing
+Destructor                if no destructor                                                        does nothing
+Copy constructor        if no move constructor and no move assignment                            copies all members
+Copy assignment            if no move constructor and no move assignment                            copies all members
+Move constructor        if no destructor, no copy constructor and no copy nor move assignment    moves all members
+Move assignment            if no destructor, no copy constructor and no copy nor move assignment    moves all members
 
 这6个隐式的成员函数，默认都是被开启的，我们可以选择开启或者禁用其中的某个或者
 全部，显示开启或关闭的方法，很简单，只要按照如下格式在类声明中注明就可以了：
@@ -486,11 +486,11 @@ function_declaration = default;
 function_declaration = delete;
 举个例子:
 class C {
-	// 表明该原型将使用c++提供的默认构造函数
-	C() = default;
-	// 表明该原型（拷贝构造函数）被禁用，即不使用拷贝构造函数（默认的拷贝构造
-	// 函数也一并被禁用了）
-	C& C(C& o) = delete;	
+    // 表明该原型将使用c++提供的默认构造函数
+    C() = default;
+    // 表明该原型（拷贝构造函数）被禁用，即不使用拷贝构造函数（默认的拷贝构造
+    // 函数也一并被禁用了）
+    C& C(C& o) = delete;    
 }
 
 =============================================================================
@@ -512,10 +512,10 @@ B中的成员的访问修饰符级别如果比继承时的访问修饰符更加�
 ，如果继承时的修饰符是private，那么对A来讲，B中所有成员的访问修饰符将被限定为
 private，从A中将无法访问B中的任何成员。
 
-Access								public		protected	private
-members of the same class			yes			yes			yes
-members of derived class			yes			yes			no
-not members							yes			no			no
+Access                                public        protected    private
+members of the same class            yes            yes            yes
+members of derived class            yes            yes            no
+not members                            yes            no            no
 
 类继承的时候，派生类会继承基类的成员，但是不包括下面这些成员：
 its constructors and its destructor
@@ -598,7 +598,7 @@ c++中在函数调用的时候，会检查传递给函数的参数类型，如�
 。例如：
 class A{};
 class B{
-	  explicit B(A& a) {..}
+      explicit B(A& a) {..}
 };
 void func(B b) {...}
 main() {
@@ -796,27 +796,27 @@ A必须是c++中标准异常类std::exception的派生类才可以，如果满�
 率。
 
 try {
-	try {
-		throw xxx;
-	}
-	catch (xxx) {
-		throw;
-	}
+    try {
+        throw xxx;
+    }
+    catch (xxx) {
+        throw;
+    }
 }
 catch (xxx) {
-	...
+    ...
 }
 
 捕获异常之后，为了能够将捕获到的对象的异常信息显示出来，可以重写std::exception
 中的成员函数what()。
 
 c++标准库中抛出的所有异常类都继承自std:exception这个类，这些异常类包括:
-bad_alloc			thrown by new on allocation failure
-bad_cast			thrown by dynamic_cast when it fails in a dynamic cast
-bad_exception		thrown by certain dynamic exception specifiers
-bad_typeid			thrown by typeid
-bad_function_call	thrown by empty function objects
-bad_weak_ptr		thrown by shared_ptr when passed a bad weak_ptr
+bad_alloc            thrown by new on allocation failure
+bad_cast            thrown by dynamic_cast when it fails in a dynamic cast
+bad_exception        thrown by certain dynamic exception specifiers
+bad_typeid            thrown by typeid
+bad_function_call    thrown by empty function objects
+bad_weak_ptr        thrown by shared_ptr when passed a bad weak_ptr
 
 =============================================================================
 Sat Sep 13 12:05:00 CST 2014
