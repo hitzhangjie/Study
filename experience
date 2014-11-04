@@ -2481,4 +2481,29 @@ in VirtualBox, don't use left ctrl key as the host key, if you do that,
 ctrl+c,ctrl+\,ctrl+d signal will not be generated and sent to the guest
 terminal. you can try left win as the host key instead of right ctrl.
 
+##############################################################################
+
+To register Nessus, fire your browser at the following url:
+	http://www.tenable.com/products/nessus/
+		nessus-plugins/obtain-an-activation-code
+
+Nessus website doesn't block the access from China. Regarding to blocking
+China access, it's nonsense.
+
+if you uninstall and reinstall nessus, you have to get a new activation code.
+the same email can be used to register more than once.
+
+/opt/nessus/sbin/nessus-update-plugins all-2.0.tar.gz，在nessus一分钟内处理完
+成之后，这个压缩包就不需要了，但是还是放在某个位置备份一下比较好。注意，这一分
+钟之内，不要重启nessus，也不要移动all-2.0.tar.gz，否则可能处理失败，而又不给出
+错误提示，最后使用nessus的时候，就会出现奇怪的问题。
+
+##############################################################################
+
+/etc/xdg/autostart/fcitx-autostart.desktop to enable fcitx autostart.
+
+##############################################################################
+
+
+
 
