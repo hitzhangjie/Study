@@ -2504,6 +2504,35 @@ the same email can be used to register more than once.
 
 ##############################################################################
 
+squid3 搭建http代理服务器
+
+##############################################################################
+
+apt-get update to find the checksum is mismatched.
+
+why and how to fix ?
+
+
+Wait a few hours. This is caused by the download site being behind a CDN, and
+the caches for Release and Packages.gz being mismatched. It'll clear itself up
+within a few hours.
+
+After ~12 hours it has not fixed itself, but a new error arose:
+
+W: A error occurred during the signature verification. The repository is not
+updated and the previous index files will be used. GPG error:
+http://download.mono-project.com wheezy Release: The following signatures were
+invalid: BADSIG A6A19B38D3D831EF Xamarin Public Jenkins (auto-signing)
+<releng@xamarin.com>
+
+W: Failed to fetch
+http://download.mono-project.com/repo/debian/dists/wheezy/Release
+
+W: Some index files failed to download. They have been ignored, or old ones
+used instead.  After 14 hours the repository was parsed successfully and the
+problem has been resolved.
+
+##############################################################################
 
 
 
