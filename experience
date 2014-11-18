@@ -2554,4 +2554,9 @@ activity.
 
 ##############################################################################
 
+eclipse 'install new software', add 'viPlugin/http://viPlugin.com', after
+pending select 'viplugin' to install, create file viPlugin2.lic, and write
+'q1MHdGlxh7nCyn_FpHaVazxTdn1tajjeIABlcgJBc20' into it, then put it under
+/opt/eclipse, restart.
 
+##############################################################################
