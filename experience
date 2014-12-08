@@ -2560,3 +2560,119 @@ pending select 'viplugin' to install, create file viPlugin2.lic, and write
 /opt/eclipse, restart.
 
 ##############################################################################
+
+grub-install --boot-directory /dev/sda
+here, --boot-directory should point to the /path/boot directory rather than
+/path/boot/grub directory, or when you restart, grub will not find relevant
+mods.
+
+and in manual, it is described clearly as following:
+--boot-directory=DIR: ... points to DIR/grub ...
+
+##############################################################################
+/etc/X11/X
+
+when kdm failed to start, i swithed to text mode, then i check the
+/var/log/kdm.log, it says there's no /etc/X11/X, then i create a symlink 
+/etc/X11/X which points to /usr/bin/Xorg. then restart kdm, ok.
+
+maybe linux distros and communities are so ... free.
+##############################################################################
+
+i remove the bug report packages, apport*
+
+##############################################################################
+
+install several display managers, conflict!
+
+after i install several display managers, some conflicts occur.
+i installed kdm, lightdm, gdm in order, then only gdm can start normally, kdm
+and lightdm will stuck when start them.
+
+so i delete logs in /var/log, then i restart kdm, and deep into
+/var/log/kdm.log, it says no X in /etc/X11/, then i recreate a symlink points
+to /usr/bin/Xorg, now kdm can start normally now.
+
+then i tried lightdm, in /var/log/lightdm/lightdm.log, it says failed to start
+greeter, then i check /var/log/lightdm/x-1-greeter.log, it says no authority
+to access /var/lib/lightdm/.Xauthority.
+then i check the mode of file .Xauthority, then i saw its owner user and group
+is 'gdm'. what a suck! it clearly belongs to 'lightdm', why you set it to
+'gdm'.
+
+what a suck! what a bug!
+
+then i checked /etc/passwd, kdm\lightdm\gdm entries exist. then i know display
+managers run as the kdm\lightdm\gdm rather than root. when i installed them,
+they changed the modes of some files which are belonged to by kdm\lightdm\gdm,
+so only the last installed one works normally. the previous can't be sure.
+
+even though you uninstall the last installed one, the previous installed must
+be reinstalled to enable it normally.
+
+i changed the owner:group of /var/lib/lightdm/* to lightdm, it works!
+
+restart! ok!
+
+##############################################################################
+
+Unknown media type in type 'all/all'
+Unknown media type in type 'all/allfiles'
+Unknown media type in type 'uri/mms'
+Unknown media type in type 'uri/mmst'
+Unknown media type in type 'uri/mmsu'
+Unknown media type in type 'uri/pnm'
+Unknown media type in type 'uri/rtspt'
+Unknown media type in type 'uri/rtspu'
+
+cd /usr/share/mimeinfo, mv kde.xml kde.xml.bakup, sudo update-mime-datebase
+
+over!
+
+##############################################################################
+
+12.04 latest kernel 3.13.0-40 is not compatible with latest virtualbox and
+relevant components in main repo.
+
+remove it and reinstall 'virtualbox virtualbox-dkms', must add '--reinstall'
+parameter.
+
+then ok.
+
+guest screen resolution can't be changed, install 'virtualbox virtualbox-dkms
+virtualbox-guest-additions virtualbox-guest-dkms virtualbox-guest-utils', must
+add '--reinstall'
+parameter.
+
+sudo service virtualbox restart, then test
+
+still not works.
+#############################################################################
+
+删除符号链接的时候，最好使用unlink，删除符号连接的时候，也会删除所指向的文件
+
+#############################################################################
+
+apt-get update, checksum mismatch
+
+原因：
+Wait a few hours. This is caused by the download site being behind a CDN, and
+the caches for Release and Packages.gz being mismatched. It'll clear itself up
+within a few hours.
+After ~12 hours it has not fixed itself, but a new error arose:
+W: A error occurred during the signature verification. The repository is not
+updated and the previous index files will be used. GPG error:
+http://download.mono-project.com wheezy Release: The following signatures were
+invalid: BADSIG A6A19B38D3D831EF Xamarin Public Jenkins (auto-signing)
+<releng@xamarin.com>
+
+W: Failed to fetch
+http://download.mono-project.com/repo/debian/dists/wheezy/Release
+W: Some index files failed to download. They have been ignored, or old ones
+used instead.
+
+After 14 hours the repository was parsed successfully and the problem has been
+resolved.
+
+#############################################################################
+
