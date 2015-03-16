@@ -2686,5 +2686,17 @@ pae内核模块
 
 #############################################################################
 
+vim treaks:
+shortcut: zz, put the current line under cursor to the center of screen.
+command: %Tohtml, convert current document to html.
+
+#############################################################################
+
+ssh-keygen 生成的公钥必须要放置在被管理服务器的root账户中才可以，才可以实现无
+密码登录. I don't know why?
+
+#############################################################################
+
+
 
 
