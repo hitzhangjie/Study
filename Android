@@ -45,11 +45,3 @@ gradle忽略了androidmanifest.xml中的配置信息，两边都要配置，真�
 
 从竖屏切换成横屏的时候，会把原来的activity杀掉，并重新创建新的activity！！！！
 了解activity生命周期很重要！
-
-
-
-
-
-
-
-
