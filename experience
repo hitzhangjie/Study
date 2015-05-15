@@ -2705,3 +2705,37 @@ ssh-keygen 生成的公钥必须要放置在被管理服务器的root账户中�
 
 #############################################################################
 
+ fedora 21, enable fan control:
+ 1) create conf file /etc/modprobe.d/thinkpad_acpi.conf, and add the following
+ lines in it:
+	options thinkpad_acpi fan_control=1
+ 2) reboot.
+
+ now you can use echo xxx > /proc/acpi/ibm/fan to control the fan speed, pay
+ attention not to damage your hardware.
+
+#############################################################################
+
+ install input method: sogoupinyin, sogoupinyin-skins
+
+	[myrepo]
+	name=Sensor
+	baseurl=https://gitcafe.com/sensor/myrepo/raw/master/fedora/$releasever/$basearch/
+	skip_if_unavailable=True
+	gpgcheck=0
+	enabled=1
+
+ add aboved repo into /etc/yum.repos.d, yum install sogoupinyin sogoupinyin-skins.
+ before doing this, you'd better remove all fcitx* to remove plugins that may
+ conflict with sogoupinyin.
+
+ and before yum install, remove ~/.config/fcitx to remove configuration files
+ that may conflict with sogoupinyin.
+
+ after yum install, you may find that sogou skins can't be set. copy all skins
+ from /usr/share/sogou-qimpanel/recommendSkin/skin/ to
+ ~/.config/sogou-qimpanel/skin/, this will solve the problem.
+
+#############################################################################
+
+
