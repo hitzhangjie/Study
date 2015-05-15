@@ -1,47 +1,15 @@
-从android2.2开始，match_parent取代了fill_parent。
 
-获取屏幕的宽度和高度，有一种已经过时了。
-安装intel的hamx，直接让安卓模拟器的速度翻了数倍，牛逼！
+Android App Development Notes
 
-提示error please select sdk的时候，从android' studio的sdk manager中更新一下配
-置就行了。
+================================================================================
 
-服务会失去控制终端的能力！！！因此其输出不应该输出到控制终端。这在apue里面是详
-细讲过的。这样的话，服务里面输出的信息就不会送到标准输出、错误输出上去了.
+2015-05-15 11:58:25 AM 
 
-但是android系统里的这种服务进程，按道理来讲与apue里面讲到的daemon进程应该是类
-似的，实际情况是，服务进程通常放弃了控制终端的输入，但没有放弃输出。android系
-统的服务就是这样的。服务进程中仍然可以通过Log.x或其他打印函数来输出信息。
+1) yesterday, i pushed the app framework to svn repo. now nearly all navigate
+interfaces has been finished.
+we'll coding for the business logical soon.
 
-每一个activity需要在androidmanifest.xml中添加，每一个service也需要在里面添加，
-如果不添加在里面，即便明确地调用，也会被android系统忽略，并抛出异常。
+2) using android studio 1.2 to build the project.
 
-给按钮button添加消息处理函数，可以通过添加事件监听器的方式，也可以通过在
-layout.xml中onClick中注明，当在layout.xml中注明的时候，假如指定的处理函数为
-func,那么对应的Activity（通过setContentView对应）实现中的方法的签名是func(View
-view)，参数表示触发该方法的控件。
+3) app support platform from 4.1.1 to 5.x.
 
-其实为按钮设置事件监听器setOnClickListener方法中也是通过复写onClick(View view)
-来实现的。
-
-R这个java文件有时候会提示有错，重新生成工程就可以解决，好像R这个文件是编译后生
-成的一样。
-
-padding, weight, gravity !!!!
-
-autocompletetextview
-
-onTouch事件处理函数
-
-WebView组件如何使用
-
-android资源名称必须小写(扩展名)。
-layout_weight怎么是反着的，数字越小占用空间越大！！！
-
-android模拟器启动起来之后，按f6可以打开声音！！！！
-
-Failure [INSTALL_FAILED_OLDER_SDK] 修改模块下面的build.gradle的配置文件，
-gradle忽略了androidmanifest.xml中的配置信息，两边都要配置，真麻烦！！！
-
-从竖屏切换成横屏的时候，会把原来的activity杀掉，并重新创建新的activity！！！！
-了解activity生命周期很重要！
