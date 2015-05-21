@@ -2697,11 +2697,24 @@ ssh-keygen 生成的公钥必须要放置在被管理服务器的root账户中�
 
 #############################################################################
 
- byobu中新增窗口、修改窗口标题的时候，会改变标题的名称，原因是，当$TERM环境变
- 量义screen开头的时候，每次在shell中出现命令行提示符的时候，都会刷新标题，这个
- 修改可以通过/usr/share/byobu/profile/tmux.conf，将set -g default-terminal
- screen'修改为xxxxxxxxxxxxxxxxx xterm-256color。
- ubuntu 12.04 lts中应该是做了类似的修改！
+ byobu\tmux升级之后，解决某些annoying problems:
+ 1)byobu配置问题，每次f2新建窗口之后，下方tab上显示的title特别长，开的窗口数量
+ 多了之后，切换起来眼花撩换，搞得整个人心情都不好了，这就是一个坑爹的配置方案
+ 。解决办法如下：
+ 修改/usr/share/byobu/profile/tmux中的配置信息，进行如下修改：
+ set -g default-terminal screen --> set -g default-terminal xterm-256color
+ 2)tmux升级之后的问题，启动tmux的时候有一个起始目录，再f2新建窗口之后，这个新
+ 增窗口的shell提示符显示，pwd显示其位置为按f2时，shell所在的目录的位置，看上去
+ 这个功能很方便，其实不然。窗口多了之后，容易引发混乱，还是统一为其实目录位置
+ 要更好些。个人看法，个人使用体验决定的。解决办法如下：
+ 修改/usr/share/byobu/keybindings/f-keys.tmux，进行如下修改：
+ 对下行内容进行修改：
+ bind-key -n F2 new-window -c "#{pane_current_path}" \; rename-window "-"
+ 修改为：
+ bind-key -n F2 new-windows -c $PWD \; rename-window "-"
+
+ 当然了，再次升级之后，上述配置信息会被覆盖，一种更好的办法是，将上述配置信息
+ 写入到~/.byobu中的相关配置文件中。这样就不用每次升级之后，重新对其进行配置.
 
 #############################################################################
 
