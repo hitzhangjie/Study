@@ -2752,12 +2752,24 @@ ssh-keygen 生成的公钥必须要放置在被管理服务器的root账户中�
 #############################################################################
 
 vim编写doc-like的文件:
+
+简化版:
+1) filename.txt
+2) modeline, <Leader>h1, <Leader>h2
+3) *tagname*
+4) |tagname|
+5) helptags `pwd`, <Leader>hh
+6) [[\]] to jump
+
+详细版：
 最关键的只有2步，一个是将待编辑的文件的文件类型在模式行modeline中设置为help类
 型；一个是通过*tagname*定制标签，然后在文档中的其他地方或者其他文档中引用的时
 候，通过|tagname|来引用实现跳转（这部分实际是参考的add-local-help）。
 上述2步是在编辑过程中比较重要的部分，另外一个，最最重要但是重要的不用提你也不
 会忘记的就是，打开文件之后，记得运行helptags `pwd`为文件生成tags。也不要忘记开
-启语法高亮等。
+启语法高亮等。说道这里的helptags `pwd`不得不提vim的运行方式，即vim只为扩展名为
+txt的文件生成tags文件，所以记得将文件的扩展名修改为txt;
+
 为了简化上述工作流程，我在vimrc里面定义了几个inoremap映射，分别是<Leader>h1和
 <Leader>h2，h1表示help-begin，h2表示help-end。
 之后在编辑文档的时候，按照前面锁提的2个关键点进行编辑就可以了。
