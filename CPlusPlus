@@ -784,7 +784,7 @@ A必须是c++中标准异常类std::exception的派生类才可以，如果满�
 
 与c++做个对比，java中捕获异常的时候，如果希望达到通过基类捕获派生类对象的目的
 ，例如通过A捕获B，那么要求类A必须是java.lang.Throwable的派生类，在java中通过基
-类异常对象Excception捕获所有的异常对象。
+类异常对象Exception捕获所有的异常对象。
 此外，java中要catch的对象必须是java.lang.Throwable的派生类，也就是普通的基本数
 据类型、非其派生类对象是不能够被当作异常抛出的。
 
