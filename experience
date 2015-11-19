@@ -1950,6 +1950,13 @@ code, it worths trying.
 	or:
 	download and manually install it, pay attention to its dependencies.
 
+	also, glimpse(www.webglimpse.net) can be installed instead of swish-e.
+
+	remark:
+	if you just want to browse source code, you needn't installing swish-e or
+	glimpse, but if you want to search some keyword or references, swish-e or
+	glimpse should be installed to help building the index.
+
 	6) install perl database driver interface (DBI) and relevant drivers
 	(database driver, DBD). you can download it from the offical site and
 	install it manually.  or, you can use apt package manager to install them.
