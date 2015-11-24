@@ -2871,3 +2871,21 @@ plymouth-scripts自身的问题。
 pmap, 显示进程使用的内存映射！
 
 ##############################################################################
+
+cherrytree中文汉化文件有误，我自己修改了一下：
+下载cherrytree源代码，由于我之前已经向作者反应过存在的问题并提交了修改后的汉化
+文件，作者也予以了合并但是现在还是没有被打包到官方源里面，官方软件源中仍然存在
+错误。
+我重新安装了系统，再次安装了cherrytree，发现还是存在想死的问题，于是将修改方法
+重新记录了一下。
+git clone https://github.com/hitzhangjie/CherryTree.git cherrytree
+cd cherrytree/locale
+./i18n_pot_to_mo.py zh_CN.po
+然后会生成很多的mo文件，并分别按照语言区域进行了划分，比如zh_CN\en\es等。
+cd zh_CN/LC_MESSAGES
+sudo cp -f cherrytree.mo /usr/share/locale/zh_CN/LC_MESSAGES/cherrytree.mo
+重新启动cherrytree即可！直接修改程序安装时的mo文件，cherrytree启动会失败，可能
+是检查了某些校验和相关的信息吧！
+
+##############################################################################
+
