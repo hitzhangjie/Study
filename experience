@@ -2897,3 +2897,10 @@ sudo cp -f cherrytree.mo /usr/share/locale/zh_CN/LC_MESSAGES/cherrytree.mo
 
 ##############################################################################
 
+ImageMagic contains some tools to manipulate images.
+
+example: convert pdf to images
+	/usr/bin/convert 100pages.pdf -append 1page.jpg
+
+##############################################################################
+
