@@ -2904,3 +2904,20 @@ example: convert pdf to images
 
 ##############################################################################
 
+关于安装了simsun字体之后，某些网站默认的字体族显示宋体为默认字体，konsole中也
+是，其他某些应用程序中也是，这些字体在网页、konsole中看起来特别糟糕。但是在wps
+或者某些其他中文程序又想通过明确指定simsun的方式来使用该字体，只是不希望默认使
+用宋体作为显示。为此通过查阅man fonts-conf手册，对系统默认设置进行了修改，主要
+包括如下几个地方：
+/usr/share/fontconfig/conf.avail/40-nonlatin.conf
+/usr/share/fontconfig/conf.avail/65-nonlatin.conf
+将其中的跟simsun、nsimsun相关的字体描述注释掉，这样当某些希望请求中文字体的程
+序请求serif、sans-serif、monospace时，就不会默认使用宋体来作为默认字体显示了，
+因为找不到该字体的描述信息了，但是在某些特定的应用，例如wps中，我们明确指定使
+用simsun字体作为字体的时候，不是通过serif、sans-serif、monospace来向系统请求获
+取一个最佳匹配字体。
+这种情况下，就满足了两种情况，即，明确指明使用simsun字体的程序依然可以使用
+simsun字体，通过serif、sans-serif、monospace来请求一个最佳匹配的中文字体的时候
+，不能使用宋体。
+
+##############################################################################
