@@ -2939,3 +2939,20 @@ find ~ -iname "*mendeley*" -print0 | xargs -0 rm -rf
 
 吃一堑长一智。
 ##############################################################################
+
+linux相关的一些权威论坛：
+cpan.org:权威的perl模块库
+freshmeat.net:linux/unix的软件的海量索引库
+kernel.org:linux内核的官方网站
+linux.com:linux论坛,适合新用户
+linux.org:linux一般信息交换地
+linux.slashdot.org:技术新闻巨头slashdot针对linux的网站
+linuxhq.com:有关内河的信息和补丁的汇编 
+lwn.net:linux和开放源代码方面的通讯社
+securityfocus.com:计算机安全方面的一般信息
+serverfault.com:针对系统管理问题而分工协作编辑的数据库
+serverfiles.com:网络管理软件和硬件的目录
+slashdot.org:各类技术新闻
+ugu.com:unix guru universe(unix高手大世界)--所有内容都好系统管理有关
+
+##############################################################################
