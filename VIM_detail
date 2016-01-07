@@ -1,0 +1,156 @@
+techniques in vim
+
+1) open and edit files has several modes as following:
+vim filename	:	open this file
+vim +n filename	:	open this file and position your cursor at line number n
+vim + filename	:	open this file and position your cursor at last line
+vim +/pattern filename:	open file and position at the first match of pattern
+vim -r filename	:	open file and recover from collapse of os
+vim -R filename	:	open file in mode read-only
+
+2) providing you have edited the file,if you press:
+:q	: 	to exit and you'll be warned because you have edited file
+:q!	:	force to quit and won't get warning message
+:w	:	to store the current modification into current file
+:wq	:	to store current modification into current file and quit
+:w fname:	store current buffer content into another file fname,save as
+:ZZ	: 	store current modification and quit
+ 
+3) insert modes,if you press:
+i	:	insert at current position
+I	:	insert at the beginning of current line
+a	:	append after current position
+A	: 	append at the end of line
+o	:	insert a new line below current line
+O	:	insert a new line above current line
+
+4) move your cursor in vim:
+j	:	to next line
+k	:	to previous line
+l	:	to right
+h	:	to left
+-	:	to the beginning of previous line
+shift +	: 	to the beginning of next line
+0	:	to the beginning of current line
+$	:	to the end of current line
+w	:	to the beginning of next word,use 'biaodianfuhao' as delimiter
+W	:	like 'w',but use space as delimiter
+b	:	to the beginning of previous word,'biaodianfuhao' as delimiter
+B	: 	to the beginning of previous word,use space as delimiter
+e	:	to the end of next word,'biaodianfuhao'
+E	:	to the end of next word,space
+(	:	to the beginning of current paragraph 
+)	:	to the end of current paragraph
+{	:	to the beginning of previous paragraph
+}	: 	to the end of next paragraph
+H	:	to the beginning of current screen,not the file
+M	:	to the middle of current screen,not the file
+L	:	to the end of current screen,not the file
+G	:	to the end of file
+gg	:	to the beginning of file
+
+5) delete content in vim:
+x	:	delete character of current position
+X	:	delete left character of current position
+d1	:	like 'x'
+d0	:	delete characters from the beginning of line to current position
+d$	:	delete characters from current position to end of line
+D	:	like 'd$'
+d^	:	like 'd0' but characters to delete doesn't include space and tab
+dw	:	delete chars from current pos to end of word
+d5w	:	delete chars from current pos to end of next 5 words
+dtc	:	
+dfc	:
+d/word	:	delete chars from current pos to the first match of 'word'
+d3{	:	delete from previous 3 paragraphs to current pos
+d{	:	delete from beginning of current paragraph to current pos
+db	:	delete from beginning of current to current pos
+dW	:	delete from current pos to end of word,use 'space' as delimiter
+dB	:	delete from beginning of current word to current pos,'space'
+d5B	:	from previous 5 words to current pos
+d)	:	from current pos to the end of current line
+d4)	:	from current pos to the end of next 5 lines
+d}	:	from current pos to the end of current paragraph
+d4}	:	from current pos to the end of next 4 paragraphs
+dd	: 	delete current line
+3dd	:	delete 3 lines from current line
+dL	: 	delete from current pos to end of current screen
+dH	:	delete from beginning of current screen to current pos
+
+6) read file's content into buffer:
+: [address] r [filename]
+read content of 'filename',then insert the content into the 'address' position  of buffer.
+if address is 0,then insert content into the beginning of buffer.
+if address is 100,then insert content after line number 100.
+if address is default,then insert content after current cursor position.
+
+7) write buffer content into file on disk
+:[address] w [!] [filename]
+because it is rarely used,we neglect it.we usually use command 'w' to store.
+
+8) go to specified line:
+'line number'+'G'
+
+9) search string1 and substitute by string2
+:[g] [address] s /searchString/substitueString [/option]
+usually,we use the command as following format:
+%s /string1/string2/g
+
+instructions:
+%s /string1/string2 /g
+||     |       |     |
+ab     c       d     e
+a: we can search string1 in all lines in current buffer
+b: substitue commmand
+c: the string we want to search
+d: use string2 to replace string1
+e: /g allows us to substitue every match in the same line.if we neglected '/g' option,and if multiple matches of string1 occurs,we can only substitue the first match.
+
+10) split the vim window:
+
+horizontally split:
+:split
+:split filename
+
+vertically split:
+:vsplit
+:vsplit filename
+
+11) change window focus in vim:
+ctrl+w+w
+
+we can also use shortcuts to change focus but it's inconvenient,so neglect it.
+
+12) close windows in vim:
+providing there're several windows splitted existing:
+:q 	:	to close current window
+:qall	:	to close all windows
+:only	: 	to close the other windows
+
+13) start a shell in vim:
+:sh
+this is the first method to execute shell commands in vim.
+after you start a shell and execute all commands,you can press 'exit' to quit 
+and go back to vim.
+
+ command
+this is another method to execute shell commands.
+by this method,you can execute only one shell command.
+
+suggest we use the first method.
+
+14) insert the result of shell command into buffer
+:.!command
+if we're in last line mode,we can use '.!command' instead of '!command',like '.!ls -al'.
+
+:!!command
+if we're in command mode,we can use '!!command' instead of 'command'.
+please note,when we type '!!command',actually it is '.!command'.
+
+15) marks 
+now i am weak in usage of mark.Day Day UP!!!!!!!
+
+ma
+'a
+mb
+'b
