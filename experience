@@ -2990,3 +2990,21 @@ apt & yum，类似的操作，总结：
 
 ##############################################################################
 
+use alien to convert a *.deb package to *.rpm package.
+
+for example, I download a xmind.deb, then I want to convert it to rpm, why?
+Because official site does not package the software to rpm. How to?
+
+1 install alien、rpmrebuild
+2 alien -r --scripts xmind.deb, the xmind.rpm will be generated
+3 after step 2, I tried to install it, but it said:
+  file /usr/bin/, /usr/lib/ conflicts with the files in package
+  filesystem.rpm, we can fix it by rpmrebuild.
+4 rpmrebuild -pe xmind.rpm, then it will use vim to edit configuration, I
+commented out the line 'attr .... /usr/bin' and line 'attr .... /usr/lib',
+save and exit, and continue rebuild.
+5 after step 4, new rpm package will be generated under ~/rpmbuild directory.
+Try to install it and enjoy yourself.
+
+##############################################################################
+
