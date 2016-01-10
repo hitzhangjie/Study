@@ -2956,3 +2956,37 @@ slashdot.org:各类技术新闻
 ugu.com:unix guru universe(unix高手大世界)--所有内容都好系统管理有关
 
 ##############################################################################
+
+apt & yum，类似的操作，总结：
+
+ 1. Simple conversions:
+
+ * apt-get install ~= yum install
+ * apt-get upgrade ~= yum upgrade
+ * apt-get remove ~= yum remove
+ * apt-get --reinstall install ~= yum reinstall
+ * apt-get install foo=1.0 ~= yum downgrade foo-1.0
+ * apt-get clean ~= yum clean
+ * apt-get build-dep ~= yum-builddep
+ * dpkg -l ~= yum list installed
+ * apt-cache search ~= yum search
+ * apt-cache search --names-only ~= yum list ~= repoquery
+ * dpkg -L ~= rpm -ql
+ * apt-file list ~= repoquery -l
+
+ 2. Not so Simple conversions:
+
+ * apt-cache show ~= yum info ~= repoquery -i
+ * apt-get purge ~= yum remove
+ * apt-get dist-upgrade ~= yum upgrade ~= yum distro-sync
+ * apt-get source ~= yumdownloader --source
+ * dpkg --get-selections ~= yum-debug-dump
+ * dpkg --set-selections ~= yum-debug-restore
+ * dpkg -S ~= repoquery --installed -f ~= rpm -qf 
+ * apt-file search ~= repoquery -f ~= yum provides 
+ * apt-get --simulate upgrade ~= yum check-update ~= yum --assumeno upgrade
+ * apt-get --simulate install ~= yum --assumeno install
+ * sbuild ~= mock
+
+##############################################################################
+
