@@ -3020,3 +3020,35 @@ mbuntun可以将基于unity的ubuntu进行深度定制，将界面打造成osx�
 synapse可以配合xdotool来提供快捷键支持。
 
 ##############################################################################
+
+kwin cool effect avoid one frame blinking
+
+ 1. fedora21:
+ replace isfadeWindow with following definition:
+ isfadeWindow: function(window) {
+	 return !window.deleted && !window.desktopWindow && window.onCurrentDesktop
+		 && window.visible && !window.skipSwitcher && !window.utility
+		 && !effect.isGrabbed(window, Effect.WindowAddedGrabRole)
+		 && !effect.isGrabbed(window, Effect.WindowClosedGrabRole)
+		 && !CoolEffect.isLoginWindow(window);
+ }
+ 2. CentOS7:
+	 ...
+
+##############################################################################
+mount Mac OSX hfsplus filesystem on Linux
+mount -t hfsplus -o force,rw /dev/osx-partition /mount-point
+##############################################################################
+
+当遇到wifi/bluetooth rfkill的问题的时候，直接关闭wifi的硬件开关，然后重新启动
+电脑，重新启动并进入系统之后，再打开硬件开关，如果此时执行rfkill list all显示
+设备仍然被soft block，则执行rfkill unblock all即可，如果已经显示没有软锁，那么
+就ok了。
+
+linux内核在启动的时候，好像是期望hard block/soft block为true！
+
+rfkill list all
+rfkill unblock all
+
+##############################################################################
+
