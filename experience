@@ -447,6 +447,8 @@ note:
 
 	change 'text/plain=...' to 'text/plain=kde4-kate',then kate will be
 	default text editor.
+
+	if install program systemwide, then you may check /usr/share/*mime*, too.
 ##############################################################################
 
 	use 'gnome classic' theme instead of 'gnome' or 'unity' themes when login
