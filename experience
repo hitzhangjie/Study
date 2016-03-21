@@ -2370,12 +2370,12 @@ make mandocs
 make installmandocs
 这里也可以生成其他格式的手册,例如pdf格式的或者html格式的,分别执行命令make
 pdfdocs或者make htmldocs即可.
-手册会被安装到/usr/share/man/man9中去,然后就可以通过man 9来查看内核提供的函数
+手册会被安装到/usr/local/man/man9中去,然后就可以通过man 9来查看内核提供的函数
 的帮助文件了。
 
 3. 如何卸载呢?
 如果不需要该内核man手册文档了,如何卸载呢?man格式的会被安装到
-/usr/share/man/man9目录下,直接删除该目录就可以了.
+/usr/local/man/man9目录下,直接删除该目录就可以了.
 
 ##############################################################################
 
