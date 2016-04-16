@@ -3183,3 +3183,11 @@ us judge where problem occurs. ':help initialization' can also help us realize
 the detailed initialization process when starting vim.
 
 ##############################################################################
+2016-04-17 02:39:03 AM
+
+vim misunderstand *.md files as modula2 filetype?
+
+edit /usr/share/vim/vim74/ftplugin.vim:
+change from 'README.md' to '*.md' for markdown;
+delete '*.md' from filetype modula2!
+##############################################################################
