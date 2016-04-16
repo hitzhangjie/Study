@@ -3176,5 +3176,10 @@ kde中的这部分环境变量应该在~/.kde/env/xxx.sh中进行设置，在里
 xxxx=xxx将变量导出即可.
 
 ##############################################################################
+2016-04-17 02:15:11 AM
 
+in vim, ':scriptnames' can list the sourced scripts in order, which will help
+us judge where problem occurs. ':help initialization' can also help us realize
+the detailed initialization process when starting vim.
 
+##############################################################################
