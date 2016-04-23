@@ -3191,3 +3191,25 @@ edit /usr/share/vim/vim74/ftplugin.vim:
 change from 'README.md' to '*.md' for markdown;
 delete '*.md' from filetype modula2!
 ##############################################################################
+2016-04-18 01:45:19 PM
+
+delete duplicate 'places' in dolphine save file dialog
+
+".kde/share/apps/kfileplaces/bookmarks.xml"
+delete this file or manually remove dupliate 'places' entries.
+
+##############################################################################
+2016-04-24 12:01:41 AM
+
+增加VBox中虚拟机的磁盘容量：
+1. 创建新的数据盘，这种容易操作，可以直接在VirtualBox图形用户界面中完成；
+备注：
+这种方式重新创建新的数据盘是可以的，但是假如我们把系统等所有的东西安装一个分区
+中，系统要升级，就得占用一定的新的空间，例如Mac OS X升级，实际上我也是在这个时
+候碰到这个问题的，这个时候创建新的数据盘是没有用的。
+而且很多时候，我们只是希望扩展现有的磁盘空间的容量，而不是重新增加新的数据盘，
+那么怎么修改呢？VBox v4.0以上的版本可以灵活地对其进行修改。
+VBoxManage modifyhd "filename.vdi" --resize ${nnnn}，其中${nnnn}的单位是MB。
+重新启动VirtualBox就可以看到虚拟机对应的最大磁盘容量的大小发生了变化。
+
+##############################################################################
