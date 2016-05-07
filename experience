@@ -553,6 +553,19 @@ note:
 
 	we can also put the shell cmds mentioned above into a script file,i copy
 	the cmds into /usr/bin/update-background.
+
+	####
+
+	in 16.04 lts, there's no %gconf.xml found, but we can get the background
+	via gsettings by exec command:
+		'gsettings get org.gnome.desktop.background picture-uri'.
+	then we can recreate the soft link.
+
+	# update background when login
+	BACKGROUND_CONFIG=`gsettings get org.gnome.desktop.background picture-uri`
+	BACKGROUND_CONFIG=`echo ${BACKGROUND_CONFIG#*//}`
+	ln -sf $BACKGROUND_CONFIG /home/zhangjie/.background-uri
+
 ##############################################################################
 
 	modify ubuntu_logo or progress_dot_on.png
@@ -596,6 +609,10 @@ note:
 		'for item in 'ls .'; do update-alternatives --install /usr/bin/$item
 		$item /usr/local/share/jdkxxx/bin/$item 10000; done'
 	over!	
+
+	note:
+	a better method is to install java as the master link, and install other
+	jdk relevant tools as slave link.
 
 ##############################################################################
 
