@@ -3278,3 +3278,17 @@ kde中的activity，好像是专门为设置不同的电源管理模式而准备
 情况选择吧。针对不同的activity，可以指定不同的电源管理模式。
 
 ##############################################################################
+2016-05-10 01:02:32 PM
+
+HIBERNATE MODE Vs SLEEP MODE
+
+While sleep puts your work and settings in memory and draws a small amount of
+power, hibernation puts your open documents and programs on your hard disk,
+and then turns off your computer. Of all the power-saving states in Windows,
+hibernation uses the least amount of power.
+
+也就是说睡眠模式，是将当前系统状态驻留到内存中，仍然会耗费一定的电力；休眠模式
+会将当前系统状态保存到磁盘，并关机，当按了开机按键之后，系统读取磁盘上保留的系
+统状态，并恢复到内存中。
+
+##############################################################################
