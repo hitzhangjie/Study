@@ -2425,12 +2425,12 @@ bakup/restore linux system
 作系统拷贝到B中，我们可以按照如下步骤进行操作：
 1）首先，我们需要将A中的linux操作系统备份，这里我们可以选择“文件系统备份”，这
 样我们通过这个备份文件还原到B中的时候，原有的文件系统中的文件属性信息都会被保
-留，这正是我们锁希望的。假定A中的linux系统在/dev/sda3中，我们通过如下命令进行
+留，这正是我们所希望的。假定A中的linux系统在/dev/sda3中，我们通过如下命令进行
 文件系统级别的备份:
 
 	首先通过这条命令检查下生成的备份文件的尺寸，以便于我们决定将这个备份文件存
 	储到哪个位置:
-	sudo dump -0s /dev/sda3	
+	sudo dump -0S /dev/sda3	
 	然后开始备份：
 	sudo dump -0u -f path/os.dump /dev/sda3
 
@@ -3300,3 +3300,20 @@ hibernation uses the least amount of power.
 以前相同的文件名，清理一下浏览器图片缓存就可以了。
 
 ##############################################################################
+2016-06-13 05:30:27 PM
+update-grub2 generates wrong UUID for 'linux16 ... root=UUID=xxxxx'.
+
+why? when modify disk partitions, new uuid will be generated! but where is it
+stored, some people say uuids will be stored into superblock of partitions.
+after that, blkid can inspect it, and update-grub2 also can inspect it.
+
+but why in grub.cfg, 'search xxxxx uuid=xxxx' is right, but 'linux16 ...
+root=UUID=xxxx' is wrong. I am still confused.
+
+it is more likely that grub2-mkconfig contains a bug.
+
+how to resolve it?
+mannually edit the file 'grub.cfg', and boot system, then re-install grub to
+/dev/sdx, then reboot into another system and exec update-grub2 again.
+##############################################################################
+
