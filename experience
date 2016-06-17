@@ -3315,5 +3315,12 @@ it is more likely that grub2-mkconfig contains a bug.
 how to resolve it?
 mannually edit the file 'grub.cfg', and boot system, then re-install grub to
 /dev/sdx, then reboot into another system and exec update-grub2 again.
-##############################################################################
 
+##############################################################################
+2016-06-17 08:24:06 PM
+
+安装cscope之后，当通过vim查看源代码并根据tag进行跳转的时候，cscope插件会将定义
+这个tag的所有文件以列表的形式显示出来，让用户选择然后再跳转；ctags是直接跳转到
+第一个中去。很明显cscope这种方式更加友好。
+
+##############################################################################
