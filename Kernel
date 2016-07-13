@@ -5638,7 +5638,7 @@ be working with.
 
 理解驱动模型以及在其上抽象出来的kobject的部分难点在于，没有明显的起始点。要想
 理解kobjects，需要理解多种不同的类型，而这些类型都是相互不同的。为了尽可能使其
-理解起来简单，我们将从头到尾讲解多变，先讲述一些含糊的术语，然后再往其中添加相
+理解起来简单，我们将从头到尾讲解多遍，先讲述一些含糊的术语，然后再往其中添加相
 应的细节。下面，是我们经常提到的一些常用术语的定义。
 
  - A kobject is an object of type struct kobject.  Kobjects have a name and a
