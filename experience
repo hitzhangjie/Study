@@ -3353,3 +3353,27 @@ newline来说当做换行进行处理是完全没有问题的，而且是相当�
 将markdown文件转换为html文件。
 
 ##############################################################################
+
+2016-08-10 12:14:47 AM
+
+CentOS common repos:
+official:
+	CentOS-Base.repo
+	CentOS-Debuginfo.repo
+	CentOS-fasttrack.repo
+	CentOS-Sources.repo
+	CentOS-Vault.repo
+	CentOS-fasttrack.repo
+	CentOS-CR.repo
+	epel.repo
+	epel-testing.repo
+3rd:
+	nux-desktop.repo
+	elrepo.repo
+bad:
+	rpmfusion-free-updates.repo
+	rpmfusion-free-update-testing.repo
+	rpmfusion-nonfree-updates.repo
+	rpmfusion-nonfree-update-testing.repo
+
+##############################################################################
