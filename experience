@@ -3433,3 +3433,14 @@ update-alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_71/bin/java 
 --slave /usr/bin/xjc xjc /usr/java/jdk1.7.0_71/bin/xjc
 
 ##############################################################################
+
+2016-08-24 14:05:34
+
+in OSX, how to speed up your input?
+defautls write NSGlobalDomain KeyRepeat -int 1				: repeat rate
+defaults write NSGlobalDomain InitialKeyRepeat -int 8		: repeat delay
+
+then logout/login again!
+
+##############################################################################
+
