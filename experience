@@ -2745,7 +2745,7 @@ ssh-keygen 生成的公钥必须要放置在被管理服务器的root账户中�
  set -g default-terminal screen --> set -g default-terminal xterm-256color
  2)tmux升级之后的问题，启动tmux的时候有一个起始目录，再f2新建窗口之后，这个新
  增窗口的shell提示符显示，pwd显示其位置为按f2时，shell所在的目录的位置，看上去
- 这个功能很方便，其实不然。窗口多了之后，容易引发混乱，还是统一为其实目录位置
+ 这个功能很方便，其实不然。窗口多了之后，容易引发混乱，还是统一为起始目录位置
  要更好些。个人看法，个人使用体验决定的。解决办法如下：
  修改/usr/share/byobu/keybindings/f-keys.tmux，进行如下修改：
  对下行内容进行修改：
@@ -3456,3 +3456,25 @@ jenv global ${ver}来设置当前shell或者系统全局使用的jdk版本。
 主要是其依赖asm这个字节码框架。kilim必须使用jdk1.7进行编译、测试，1.8会抛异常。
 
 ##############################################################################
+
+2017-04-02 22:32:50 +0800
+
+之前安装的vim的markdown预览插件，不能很好地对特殊字符&和<进行处理，通过修改文
+件/usr/local/lib/node_modules/instant-markdown-d来修复这个问题。
+
+function writeMarkdown(input, output) {
+  var body = '';
+  input.on('data', function(data) {
+    body += data;
+    if (body.length > 1e6) {
+      throw new Error('The request body is too long.');
+    }
+  });
+  input.on('end', function() {
+    // 自动转换markdown中的特殊字符&和<，Enjoy it！
+    body = body.replace(/&/g, '&amp;');     // 转换&
+    body = body.replace(/</g, '&lt;');      // 转换<
+    output.emit('newContent', md.render(body));
+  });
+}
+
