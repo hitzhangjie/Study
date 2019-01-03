@@ -110,12 +110,20 @@ here are the three methods to start linux from grub cli:
 	
 	here are the only method to start windows from grub cli:
 
+    - for grub1:
+
 	rootnoverify (hd0,msdos1)	:this option prevents grub trying to mount
 								:partition hd0/msdos1
 
 	chainloader +1				:this option +1 let grub try to load the
 								:proper boot-loader for windows from the 1st
 								:fan sector of (hd0,msdos1)
+
+    - for grub2: there's no command rootnoverify.
+
+    set root=(hd0,msdos1)
+    chainloader +1
+    boot
 
 this is useful when you reinstall windows os,windows bootloader will override
 mbr and other os boot items will be missing.  then you can use a linux live cd

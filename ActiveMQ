@@ -1,6 +1,5 @@
-###############################################################################
 #									ActiveMQ								  #
-###############################################################################
+############################################################################
 add 'activemq-all-5.9.0.jar' into CLASSPATH
 cd /usr/local/apache-activemq-5.9.0/bin
 
@@ -13,29 +12,32 @@ activemq restart
 check:
 netstat -a | grep 61616
 
-????
 invalid broker URI, no specified scheme
 for windows:
 drop console argument after activemq.bat, just run: activemq
-###############################################################################
+
 using web console to monitor activemq:
 
 for version 5.9, new monitor tool hawtio can be used:
 	point your browser at ---> http://localhost:8161/hawtio
 
-	username:admin
-	password:admin
+
+
+username:admin
+password:admin
 
 for previous version, there's also a monitor tool (not hawtio) can be used:
 	point your browser at ---> http://localhost:8161/admin
 
-	username:admin
-	password:admin
 
-	pairs of username/password are defined in file:
+
+username:admin
+password:admin
+	
+pairs of username/password are defined in file:
 		/usr/local/apache-activemq-5.9.0/conf/jetty-realm.properties
 
-###############################################################################
+
 
 /home/zhangjie/activemq/java/Publisher.java
 /home/zhangjie/activemq/java/Consumer.java
@@ -45,7 +47,7 @@ java Consumer
 java Publisher
 
 then check localhost:8161/admin, you can see the change.
-###############################################################################
+
 browse the webapps demo
 
 start activemq as following:
@@ -55,62 +57,7 @@ start activemq as following:
 
 point browser at:
 	http://localhost:8161/demo
-###############################################################################
 
-on ubuntu, we needn't manually install Ant or configure the relevant env vars.
-
-we can simply install ant by 'sudo apt-get install ant'.
-###############################################################################
 openwire:
 	uri="tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrame
 	-Size=104857600"
-###############################################################################
-#							Java Message Service							  #
-###############################################################################
-#
-read jdk JMS tutorial
-
-
-
-###############################################################################
-#						eXtensible Markup Language							  #
-###############################################################################
-#
-xml is designed to carry data, not to display data.
-###############################################################################
-xml format
-
-<?xml version=".." encoding=".."?>
-...
-###############################################################################
-xml syntax
-1) all xml elements must have a closing tag
-2) xml tags are all case sensitive
-3) xml elements must be properly nested
-4) xml documents must have a root element
-5) xml attribute values must be quoted
-6) entity references:
-	&lt;	<
-	&gt;	>
-	&amp;	& 
-	&apos;	'
-	&quot;	"
-7) comment
-	<!-- ... -->
-8) white-space is preserved, not truncted like HTML
-9) xml stores new line as LF
-###############################################################################
-xml element naming rules:
-1) names can contain letters, numbers and other characters
-2) names cannot start with numbers or punctuations
-3) names cannot start with xml,Xml,XML,etc
-4) names cannot contain spaces
-###############################################################################
-metadata(data of data) should be stored as attribute, while data itself should
-be stored as elements.
-###############################################################################
-eXtensible Stylesheet Language Transformation
-
-with XSLT, you can transform an XML document into HTML
-###############################################################################
-
