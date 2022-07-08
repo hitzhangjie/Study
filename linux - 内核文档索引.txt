@@ -27,12 +27,12 @@ which function to execute is put on a queue.  An independent thread serves as
 the asynchronous execution context.  The queue is called workqueue and the
 thread is called worker.
 
-[4] volatile-considered-harmful.txt
-C programmers have often taken volatile to mean that the variable could be
-changed outside of the current thread of execution; as a result, they are
-sometimes tempted to use it in kernel code when shared data structures are
-being used.  In other words, they have been known to treat volatile types
-kernel code is almost never correct; this document describes why.
+**[4] volatile-considered-harmful.txt**
+**C programmers have often taken volatile to mean that the variable could be**
+**changed outside of the current thread of execution; as a result, they are**
+**sometimes tempted to use it in kernel code when shared data structures are**
+**being used.  In other words, they have been known to treat volatile types**
+**kernel code is almost never correct; this document describes why.**
 
 [5] video-output.txt
 The output sysfs class driver provides an abstract video output layer that can
@@ -57,13 +57,14 @@ kernel code has been rewritten to use Unicode to map characters to fonts.  By
 downloading a single Unicode-to-font table, both the eight-bit character sets
 and UTF-8 mode are changed to use the font as indicated.
 
-[9] unaligned memory access
-Linux runs on a wide variety of architectures which have varying behaviour
-when it comes to memory access. This document presents some details about
-unaligned accesses, why you need to write code that doesn't cause them, and
-how to write such code!
+**[9] unaligned memory access**
+**Linux runs on a wide variety of architectures which have varying behaviour**
+**when it comes to memory access. This document presents some details about**
+**unaligned accesses, why you need to write code that doesn't cause them, and**
+**how to write such code!**
 
 =============================================================================
+
 Fri Sep 19 10:59:56 CST 2014
 =============================================================================
 
@@ -161,19 +162,19 @@ Procedure for submitting patches to the -stable tree:
   - If the patch requires other patches as prerequisites which can be
     cherry-picked than this can be specified in the following format in
     the sign-off area:
- 
+
       Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
       Cc: <stable@vger.kernel.org> # 3.3.x: 1b9508f: sched: Rate-limit newidle
       Cc: <stable@vger.kernel.org> # 3.3.x: fd21073: sched: Fix affinity logic
       Cc: <stable@vger.kernel.org> # 3.3.x
      Signed-off-by: Ingo Molnar <mingo@elte.hu>
- 
+
     The tag sequence has the meaning of:
       git cherry-pick a1f84a3
       git cherry-pick 1b9508f
       git cherry-pick fd21073
       git cherry-pick <this commit>
- 
+
   - The sender will receive an ACK when the patch has been accepted into the
     queue, or a NAK if the patch is rejected.  This response might take a few
     days, according to the developer's schedules.
@@ -211,8 +212,8 @@ count on being stable.
 there are two main topics here, binary kernel interfaces and stable kernel
 source interfaces.  They both depend on each other, but we will discuss the
 binary stuff first to get it out of the way.
- 
- 
+
+
 Binary Kernel Interface
 -----------------------
 Assuming that we had a stable kernel source interface for the kernel, a binary
@@ -236,6 +237,7 @@ following facts about the Linux kernel:
         There is no way that binary drivers from one architecture will run
         on another architecture properly.
             
+
 Now a number of these issues can be addressed by simply compiling your module
 for the exact specific kernel configuration, using the same exact C compiler
 that the kernel was built with.  This is sufficient if you want to provide a
@@ -311,11 +313,11 @@ small as possible, and that all potential interfaces are tested as well as
 they can be (unused interfaces are pretty much impossible to test for
 validity.)
 
-[15] spinlocks.txt
+**[15] spinlocks.txt**
 
-自旋锁，这里自旋的意思值得是线程在一个while循环中不停地检查期望的条件是否得到
-了满足，如果没有得到满足就等待一段时间，然后继续检查，知道满足之后才会执行后续
-的处理。
+**自旋锁，这里自旋的意思值得是线程在一个while循环中不停地检查期望的条件是否得到**
+**了满足，如果没有得到满足就等待一段时间，然后继续检查，知道满足之后才会执行后续**
+**的处理。**
 说白了，自旋就是忙等，我们在以前学习组成原理的时候，了解到cpu与设备的通信方式
 主要有3种，分别是程序查询方式（忙等）、中断请求、DMA。其中程序查询方式会中断
 cpu的执行，原地踏步，影响cpu的执行效率，可能想到这的时候会认为自旋锁也是这样的
@@ -340,17 +342,17 @@ non-irq版本的自旋锁进入临界区后，如果有相同的cpu上有中断�
 锁。
 
 Lesson 1: Spin locks
- 
-The most basic primitive for locking is spinlock.
- 
-    static DEFINE_SPINLOCK(xxx_lock);
- 
-        unsigned long flags;
 
+The most basic primitive for locking is spinlock.
+
+    static DEFINE_SPINLOCK(xxx_lock);
+     
+        unsigned long flags;
+    
         spin_lock_irqsave(&xxx_lock, flags);
         ... critical section here ..
         spin_unlock_irqrestore(&xxx_lock, flags);
-
+    
     这里的自旋锁会屏蔽后期到达的中断请求，屏蔽并不是表示忽略，而是将到达的中断
     请求暂时保存起来，即irqsave，等临界区代码执行完毕时，再将咱存的中断请求恢
     复，即irqrestore。
@@ -367,7 +369,7 @@ spin_lock_irqsave/spin_lock_irqrestore会禁止中断，这种方式使得自旋
 两种情况下均适用。
 
 NOTE! Implications of spin_locks for memory are further described in:
- 
+
     Documentation/memory-barriers.txt
        (5) LOCK operations.
        (6) UNLOCK operations.
@@ -387,17 +389,17 @@ example, internal driver data structures that nobody else ever touches).
 NOTE! The spin-lock is safe only when you _also_ use the lock itself to do
 locking across CPU's, which implies that EVERYTHING that touches a shared
 variable has to agree about the spinlock they want to use.
- 
+
 ----
- 
+
 Lesson 2: reader-writer spinlocks.
- 
+
 If your data accesses have a very natural pattern where you usually tend to
 mostly read from the shared variables, the reader-writer locks (rw_lock)
 versions of the spinlocks are sometimes useful. They allow multiple readers to
 be in the same critical region at once, but if somebody wants to change the
 variables it has to get an exclusive write lock.
- 
+
 NOTE! reader-writer locks require more atomic memory operations than simple
 spinlocks.  Unless the reader critical section is long, you are better off
 just using spinlocks.
@@ -408,37 +410,37 @@ just using spinlocks.
 而自旋锁的另一个版本，读写锁，在读者较多的情况下，能够适当提高并行性，提升系统
 性能，但是这种情况下，最好临界区比较长，如果临界区比较短的情况下，并行性能的提
 升也不会很明显，这个时候最好使用简单版本的自旋锁。
- 
+
 The routines look the same as above:
- 
+
     rwlock_t xxx_lock = __RW_LOCK_UNLOCKED(xxx_lock);
- 
+     
          unsigned long flags;
- 
+     
          read_lock_irqsave(&xxx_lock, flags);
          .. critical section that only reads the info ...
          read_unlock_irqrestore(&xxx_lock, flags);
- 
+     
          write_lock_irqsave(&xxx_lock, flags);
          .. read and write exclusive access to the info ...
          write_unlock_irqrestore(&xxx_lock, flags);
- 
+
 The above kind of lock may be useful for complex data structures like linked
 lists, especially searching for entries without changing the list itself.  The
 read lock allows many concurrent readers.  Anything that _changes_ the list
 will have to get the write lock.
- 
+
 NOTE! RCU is better for list traversal, but requires careful attention to
 design detail (see Documentation/RCU/listRCU.txt).
- 
+
 Also, you cannot "upgrade" a read-lock to a write-lock, so if you at _any_
 time need to do any changes (even if you don't do it every time), you have to
 get the write-lock at the very beginning.
- 
+
 NOTE! We are working hard to remove reader-writer spinlocks in most cases, so
 please don't add a new one without consensus.  (Instead, see
 Documentation/RCU/rcu.txt for complete information.)
- 
+
 Lesson 3: spinlocks revisited.
 
 The single spin-lock primitives above are by no means the only ones. They are
@@ -476,22 +478,22 @@ play with the spinlock is that you can get deadlocks:
         ...
                 <- interrupt comes in:
                         spin_lock(&lock);
-
+    
         如果在处理器1上加了自旋锁，在进入临界区之后，如果在相同的处理器上有中
         断请求，并且处理函数中也请求对相同的自旋锁进行加锁，此时就会发生死锁;
         如果该中断是在不同的处理器上的话，则不会引发死锁。
-
+    
         为什么会这样呢，前面讲述各个版本的自旋锁之前，我们提到了自旋锁的实现与
         具体的cpu架构以及特殊的汇编指令有关，好的，现在我们讲一下x86架构下，一
         个non-irq版本的自旋锁的实现（详细信息参看wiki）：
-
+    
         ; Intel syntax
          
         locked:        ; The lock variable. 1 = locked, 0 = unlocked.
              dd      0
         spin_lock:
              mov     eax, 1          ; Set the EAX register to 1.
-
+    
              xchg    eax, [locked]   ; Atomically swap the EAX register with
                                      ; the lock variable.
                                      ; This will always store 1 to the lock, leaving
@@ -534,10 +536,10 @@ interrupt，不指出来理解起来就是误解。
     时候，cpu不会允许该加锁，参考上面x86中spinlock的实现，当前[locked]中值为1
     ，xchg之后，eax为1，test eax,eax，标志寄存器Z为1，jnz spin_lock继续自旋，
     可见此时加锁没有成功，中断会继续自旋直到加锁成功。
-
+    
     如果要加锁成功，就要等到cpu1上的持有锁的线程释放锁，只要它释放了锁，cpu2上
-    的执行中断处理函数的线程就能够成功对齐进行加锁，二者不会构成死锁。
-
+    的执行中断处理函数的线程就能够成功对其、进行加锁，二者不会构成死锁。
+    
     所以说这种情形下，是可行的！
 】
 
@@ -551,7 +553,7 @@ interrupt，不指出来理解起来就是误解。
     成功，中断1会继续自旋直到加锁成功，但是，只有持有该锁的当前线程被中断了，
     释放锁的代码不可能被执行，也就是说中断处理函数中会一直阻塞不会返回。中断处
     理函数请求加锁，而当前线程作为锁的持有者，又不释放锁，从而造成死锁。
-
+    
     所以说这种情形下，是不可行的！
 】
 
@@ -736,7 +738,7 @@ case everything will still work.
 
 [20] rtc.txt
 
-eal Time Clock (RTC) Drivers for Linux
+Real Time Clock (RTC) Drivers for Linux
 
 [21] rt-mutex.txt
 
@@ -901,7 +903,7 @@ inversion.
 之为不受限制的优先级反转。
 
  Here's a little ASCII art to show the problem.
- 
+
     grab lock L1 (owned by C)
           |
      A ---+
@@ -1148,7 +1150,7 @@ void func4(void)
     mutex_lock(L3);
 
     /* do something again */
-
+    
     mutex_unlock(L3);
 }
 
@@ -1836,7 +1838,7 @@ function before writing up the syscalls (that function returns -ENOSYS right
 [24] robust-futex-ABI.txt
 
 The robust futex ABI
-ABI:帮助的意思
+robust futex
 --------------------
 
 Robust_futexes provide a mechanism that is used in addition to normal futexes,
@@ -2043,15 +2045,15 @@ the system software.
 
 [26] rbtree.txt
 
-What are red-black trees, and what are they for?
+**What are red-black trees, and what are they for?**
 ------------------------------------------------
 
-Red-black trees are a type of self-balancing binary search tree, used for
-storing sortable key/value data pairs.  This differs from radix trees (which
-are used to efficiently store sparse arrays and thus use long integer indexes
-to insert/access/delete nodes) and hash tables (which are not kept sorted to
-be easily traversed in order, and must be tuned for a specific size and
-hash function where rbtrees scale gracefully storing arbitrary keys).
+**Red-black trees are a type of self-balancing binary search tree, used for**
+**storing sortable key/value data pairs.  This differs from radix trees (which**
+**are used to efficiently store sparse arrays and thus use long integer indexes**
+**to insert/access/delete nodes) and hash tables (which are not kept sorted to**
+**be easily traversed in order, and must be tuned for a specific size and**
+**hash function where rbtrees scale gracefully storing arbitrary keys).**
 
 Red-black trees are similar to AVL trees, but provide faster real-time bounded
 worst case performance for insertion and deletion (at most two rotations and
@@ -2419,7 +2421,7 @@ useful only for:
 
      Example: "pte_t" etc. opaque objects that you can only access using
      the proper accessor functions.
-
+    
      NOTE! Opaqueness and "accessor functions" are not good in themselves.
      The reason we have them for things like pte_t etc. is that there
      really is absolutely _zero_ portably accessible information there.
@@ -2429,12 +2431,12 @@ useful only for:
 
      u8/u16/u32 are perfectly fine typedefs, although they fit into
      category (d) better than here.
-
+    
      NOTE! Again - there needs to be a _reason_ for this. If something is
      "unsigned long", then there's no reason to do
-
+    
         typedef unsigned long myflags_t;
-
+    
      but if there is a clear reason for why it under certain circumstances
      might be an "unsigned int" and under other configurations might be
      "unsigned long", then by all means go ahead and use a typedef.
@@ -2448,12 +2450,12 @@ useful only for:
      Although it would only take a short amount of time for the eyes and
      brain to become accustomed to the standard types like 'uint32_t',
      some people object to their use anyway.
-
+    
      Therefore, the Linux-specific 'u8/u16/u32/u64' types and their
      signed equivalents which are identical to standard types are
      permitted -- although they are not mandatory in new code of your
      own.
-
+    
      When editing existing code which already uses one or the other set
      of types, you should conform to the existing choices in that code.
 
@@ -2536,7 +2538,7 @@ int fun(int a)
 
         if (buffer == NULL)
                 return -ENOMEM;
-
+    
         if (condition1) {
                 while (loop1) {
                         ...
@@ -2960,41 +2962,41 @@ You will then do:
           between .50 and .69, else the mid point between .28 and .50.
         . You'll narrow it down to the kernel that introduced the bug.  You
           can probably do better than this but it gets tricky.
-
+    
         . Narrow it down to a subdirectory
-
+    
           - Copy kernel that works into "test".  Let's say that 3.62 works,
             but 3.63 doesn't.  So you diff -r those two kernels and come
             up with a list of directories that changed.  For each of those
             directories:
-
+    
                 Copy the non-working directory next to the working directory
                 as "dir.63".
                 One directory at time, try moving the working directory to
                 "dir.62" and mv dir.63 dir"time, try
-
+    
                         mv dir dir.62
                         mv dir.63 dir
                         find dir -name '*.[oa]' -print | xargs rm -f
-
+    
                 And then rebuild and retest.  Assuming that all related
                 changes were contained in the sub directory, this should
                 isolate the change to a directory.
-
+    
                 Problems: changes in header files may have occurred; I've
                 found in my case that they were self explanatory - you may
                 or may not want to give up when that happens.
-
+    
         . Narrow it down to a file
-
+    
           - You can apply the same technique to each file in the directory,
             hoping that the changes in that file are self contained.
-
+    
         . Narrow it down to a routine
-
+    
           - You can take the old file and the new file and manually create
             a merged file that has
-
+    
                 #ifdef VER62
                 routine()
                 {
@@ -3006,14 +3008,14 @@ You will then do:
                         ...
                 }
                 #endif
-
+    
             And then walk through that file, one routine at a time and
             prefix it with
-
+    
                 #define VER62
                 /* both routines here */
                 #undef VER62
-
+    
             Then recompile, retest, move the ifdefs until you find the one
             that makes the difference.
 
@@ -3182,9 +3184,11 @@ familiar with IPMI itself, see the web site at:
 http://www.intel.com/design/servers/ipmi/index.htm.  
 IPMI is a big subject and I can't cover it all here!
 
-[48] IRQ-affinity.txt
+**[48] IRQ-affinity.txt**
 
-SMP IRQ affinity，指的是对称多处理器中的中断请求绑定。
+**SMP IRQ affinity，指的是**
+
+**对称多处理器中的中断请求绑定。**
 
 /proc/irq/IRQ#/smp_affinity and /proc/irq/IRQ#/smp_affinity_list specify which
 target CPUs are permitted for a given IRQ source.  It's a bitmask
@@ -3288,13 +3292,13 @@ Here is an example of limiting that same irq (44) to cpus 1024 to 1031:
 Note that to do this with a bitmask would require 32 bitmasks of zero to
 follow the pertinent one.
 
-[49] IRQ.txt
+**[49] IRQ.txt**
 
-What is an IRQ?
+**What is an IRQ?**
 
-An IRQ is an interrupt request from a device.  Currently they can come in over
-a pin, or over a packet.  Several devices may be connected to the same pin
-thus sharing an IRQ.
+**An IRQ is an interrupt request from a device.  Currently they can come in over**
+**a pin, or over a packet.  Several devices may be connected to the same pin**
+**thus sharing an IRQ.**
 
 An IRQ number is a kernel identifier used to talk about a hardware interrupt
 source.  Typically this is an index into the global irq_desc array, but except
@@ -3365,12 +3369,14 @@ killed.  This is because these applications are incorrectly holding
 
 You can identify processes which will be killed by SAK with the command
 
-# ls -l /proc/[0-9]*/fd/* | grep console
+ls -l /proc/[0-9]*/fd/* | grep console
+
 l-wx------ 1  root  root  64 Mar 18 00:46 /proc/579/fd/0 -> /dev/console
 
 Then:
 
-# ps aux|grep 579
+ps aux|grep 579
+
 root  579  0.0  0.1  1088  436 ?  S  00:43  0:00 gpm -t ps/2
 
 So `gpm' will be killed by SAK.  This is a bug in gpm.  It should be closing
@@ -3450,7 +3456,7 @@ enter any non-disclosure agreements.
 [55] SubmitChecklist.txt
 
 Linux Kernel patch submission checklist
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 Here are some basic things that developers should do if they want to see their
 kernel patch submissions accepted more quickly.
@@ -3460,6 +3466,7 @@ Documentation/SubmittingPatches and elsewhere regarding submitting Linux
 kernel patches.
 
 
+```
 1: If you use a facility then #include the file that defines/declares
    that facility.  Don't depend on other header files pulling in ones
    that you use.
@@ -3498,58 +3505,56 @@ kernel patches.
              but any one function that uses more than 512 bytes on the stack is a
              candidate for change.
          
-         11: Include kernel-doc to document global kernel APIs.  (Not required for
-                     static functions, but OK there also.) Use 'make htmldocs' or 'make
-             mandocs' to check the kernel-doc and fix any issues.
+11: Include kernel-doc to document global kernel APIs.  (Not required for
+                     static functions, but OK there also.) Use 'make htmldocs' or 'make mandocs' to check the kernel-doc and fix any issues.
          
-         12: Has been tested with CONFIG_PREEMPT, CONFIG_DEBUG_PREEMPT,
+12: Has been tested with CONFIG_PREEMPT, CONFIG_DEBUG_PREEMPT,
              CONFIG_DEBUG_SLAB, CONFIG_DEBUG_PAGEALLOC, CONFIG_DEBUG_MUTEXES,
              CONFIG_DEBUG_SPINLOCK, CONFIG_DEBUG_ATOMIC_SLEEP, CONFIG_PROVE_RCU
              and CONFIG_DEBUG_OBJECTS_RCU_HEAD all simultaneously enabled.
          
-         13: Has been build- and runtime tested with and without CONFIG_SMP and
+13: Has been build- and runtime tested with and without CONFIG_SMP and
              CONFIG_PREEMPT.
          
-         14: If the patch affects IO/Disk, etc: has been tested with and without
+14: If the patch affects IO/Disk, etc: has been tested with and without
              CONFIG_LBDAF.
          
-         15: All codepaths have been exercised with all lockdep features enabled.
+15: All codepaths have been exercised with all lockdep features enabled.
          
-         16: All new /proc entries are documented under Documentation/
+16: All new /proc entries are documented under Documentation/
          
-         17: All new kernel boot parameters are documented in
+17: All new kernel boot parameters are documented in
              Documentation/kernel-parameters.txt.
          
-         18: All new module parameters are documented with MODULE_PARM_DESC()
+18: All new module parameters are documented with MODULE_PARM_DESC()
     
-    19: All new userspace interfaces are documented in Documentation/ABI/.
+19: All new userspace interfaces are documented in Documentation/ABI/.
         See Documentation/ABI/README for more information.
         Patches that change userspace interfaces should be CCed to
         linux-api@vger.kernel.org.
     
-    20: Check that it all passes `make headers_check'.
+20: Check that it all passes `make headers_check'.
     
-    21: Has been checked with injection of at least slab and page-allocation
+21: Has been checked with injection of at least slab and page-allocation
         failures.  See Documentation/fault-injection/.
     
         If the new code is substantial, addition of subsystem-specific fault
         injection might be appropriate.
     
-    22: Newly-added code has been compiled with `gcc -W' (use "make
-                EXTRA_CFLAGS=-W").  This will generate lots of noise, but is good for
-        finding bugs like "warning: comparison between signed and unsigned".
+22: Newly-added code has been compiled with `gcc -W' (use "make
+		EXTRA_CFLAGS=-W").  This will generate lots of noise, but is good for finding 		bugs like "warning: comparison between signed and unsigned".
     
-    23: Tested after it has been merged into the -mm patchset to make sure
+23: Tested after it has been merged into the -mm patchset to make sure
         that it still works with all of the other queued patches and various
         changes in the VM, VFS, and other subsystems.
     
-    24: All memory barriers {e.g., barrier(), rmb(), wmb()} need a comment in the
+24: All memory barriers {e.g., barrier(), rmb(), wmb()} need a comment in the
         source code that explains the logic of what they are doing and why.
     
-    25: If any ioctl's are added by the patch, then also update
+25: If any ioctl's are added by the patch, then also update
         Documentation/ioctl/ioctl-number.txt.
     
-    26: If your modified source code depends on or uses any of the kernel
+26: If your modified source code depends on or uses any of the kernel
         APIs or features that are related to the following kconfig symbols,
         then test multiple builds with the related kconfig symbols disabled
         and/or =m (if that option is available) [not all of these at the
@@ -3558,6 +3563,7 @@ kernel patches.
         CONFIG_SMP, CONFIG_SYSFS, CONFIG_PROC_FS, CONFIG_INPUT, CONFIG_PCI,
         CONFIG_BLOCK, CONFIG_PM, CONFIG_HOTPLUG, CONFIG_MAGIC_SYSRQ,
         CONFIG_NET, CONFIG_INET=n (but latter with CONFIG_NET=y)
+```
 
 [56] SubmittingPatches.txt
 
@@ -3589,7 +3595,7 @@ format, as supplied by the '-u' argument to diff(1).  Also, please use the
 '-p' argument which shows which C function each change is in - that makes the
 resultant diff a lot easier to read.  Patches should be based in the root
 kernel source directory, not in any lower subdirectory.
- 
+
 To create a patch for a single file, it is often sufficient to do:
      
     SRCTREE= linux-2.6
@@ -3600,7 +3606,7 @@ To create a patch for a single file, it is often sufficient to do:
     vi $MYFILE      # make your change
     cd ..
     diff -up $SRCTREE/$MYFILE{.orig,} > /tmp/patch
-     
+
 To create a patch for multiple files, you should unpack a "vanilla", or
 unmodified kernel source tree, and generate a diff against your own source
 tree.  For example:
@@ -3611,7 +3617,7 @@ tree.  For example:
     mv linux-2.6.12 linux-2.6.12-vanilla
     diff -uprN -X linux-2.6.12-vanilla/Documentation/dontdiff \
     linux-2.6.12-vanilla $MYSRC > /tmp/patch
-         
+
 "dontdiff" is a list of files which are generated by the kernel during the
 build process, and should be ignored in any diff(1)-generated patch.  The
 "dontdiff" file is included in the kernel tree in 2.6.12 and later.  For
@@ -3748,7 +3754,8 @@ monkey in re-transmission mode)
     
     
 7) No MIME, no links, no compression, no attachments.  Just plain text.
-    
+   
+
 Linus and other kernel developers need to be able to read and comment on the
 changes you are submitting.  It is important for a kernel developer to be able
 to "quote" your changes, using standard e-mail tools, so that they may comment
@@ -3771,7 +3778,8 @@ See Documentation/email-clients.txt for hints about configuring your e-mail
 client so that it sends your patches untouched.
     
 8) E-mail size.
-    
+   
+
 When sending patches to Linus, always follow step #7.
     
 Large changes are not appropriate for mailing lists, and some maintainers.  If
@@ -3780,7 +3788,8 @@ store your patch on an Internet-accessible server, and provide instead a URL
 (link) pointing to your patch.
     
 9) Name your kernel version.
-    
+   
+
 It is important to note, either in the subject line or in the patch
 description, the kernel version to which this patch applies.
     
@@ -3789,6 +3798,7 @@ not apply it.
     
 10) Don't get discouraged.  Re-submit.
     
+
 After you have submitted your change, be patient and wait.  If Linus likes
 your change and applies it, it will appear in the next version of the kernel
 that he releases.
@@ -3811,6 +3821,7 @@ When in doubt, solicit comments on linux-kernel mailing list.
     
 11) Include PATCH in the subject
     
+
 Due to high e-mail traffic to Linus, and to linux-kernel, it is common
 convention to prefix your subject line with [PATCH].  This lets Linus and
 other kernel developers more easily distinguish patches from other e-mail
@@ -3818,6 +3829,7 @@ discussions.
     
 12) Sign your work
     
+
 To improve tracking of who did what, especially with patches that can
 percolate to their final resting place in the kernel through several layers of
 maintainers, we've introduced a "sign-off" procedure on patches that are being
@@ -3829,9 +3841,9 @@ an open-source patch.  The rules are pretty simple: if you can certify the
 below:
     
         Developer's Certificate of Origin 1.1
-
+    
         By making a contribution to this project, I certify that:
-
+    
         (a) The contribution was created in whole or in part by me and I have
             the right to submit it under the open source license indicated in
             the file; or
@@ -3854,7 +3866,7 @@ below:
     
     then you just add a line saying
             Signed-off-by: Random J Developer <random@developer.example.org>
-    
+
 using your real name (sorry, no pseudonyms or anonymous contributions.)
     
 Some people also put extra tags at the end.  They'll just be ignored for now,
@@ -3877,7 +3889,7 @@ last-minute changes. Example :
         Signed-off-by: Random J Developer <random@developer.example.org>
         [lucky@maintainer.example.org: struct foo moved from foo.c to foo.h]
         Signed-off-by: Lucky K Maintainer <lucky@maintainer.example.org>
-    
+
 This practise is particularly helpful if you maintain a stable branch and want
 at the same time to credit the author, track changes, merge the fix, and
 protect the submitter from complaints. Note that under no circumstances can
@@ -3890,25 +3902,24 @@ insert an indication of the origin of a patch at the top of the commit message
 what we see in 2.6-stable :
     
     Date:   Tue May 13 19:10:30 +0000
-
-        SCSI: libiscsi regression in 2.6.25: fix nop timer handling
-
-        commit 4cf1043593db6a337f10e006c23c69e5fc93e722 upstream
     
+        SCSI: libiscsi regression in 2.6.25: fix nop timer handling
+    
+        commit 4cf1043593db6a337f10e006c23c69e5fc93e722 upstream
+
 And here's what appears in 2.4 :
     
     Date:   Tue May 13 22:12:27 +0200
     
         wireless, airo: waitbusy() won't delay
-
-        [backport of 2.6 commit b7acbdfbd1f277c1eb23f344f899cfa4cd0bf36a]
     
+        [backport of 2.6 commit b7acbdfbd1f277c1eb23f344f899cfa4cd0bf36a]
+
 Whatever the format, this information provides a valuable help to people
 tracking your trees, and to people trying to trouble-shoot bugs in your tree.
-    
-    
 13) When to use Acked-by: and Cc:
     
+
 The Signed-off-by: tag indicates that the signer was involved in the
 development of the patch, or that he/she was in the patch's delivery path.
     
@@ -3956,22 +3967,22 @@ Reviewed-by:, instead, indicates that the patch has been reviewed and found
 acceptable according to the Reviewer's Statement:
 
         Reviewer's statement of oversight
-
+    
         By offering my Reviewed-by: tag, I state that:
-
+    
          (a) I have carried out a technical review of this patch to
              evaluate its appropriateness and readiness for inclusion into
              the mainline kernel.
-
+    
          (b) Any problems, concerns, or questions relating to the patch
              have been communicated back to the submitter.  I am satisfied
              with the submitter's response to my comments.
-
+    
          (c) While there may be things that could be improved with this
              submission, I believe that it is, at this time, (1) a
              worthwhile modification to the kernel, and (2) free of known
              issues which would argue against its inclusion.
-
+    
          (d) While I have reviewed the patch and believe it to be sound, I
              do not (unless explicitly stated elsewhere) make any
              warranties or guarantees that it will achieve its stated
@@ -4102,9 +4113,9 @@ triple-click just selects the whole thing.
 So the proper format is something along the lines of:
 
         "Please pull from
-
+    
                 git://jdelvare.pck.nerim.net/jdelvare-2.6 i2c-for-linus
-
+    
          to get these changes:"
 
 so that I don't have to hunt-and-peck for the address and inevitably get it
@@ -4309,7 +4320,7 @@ Control:    In general if there is active maintenance of a driver by the
                      
 What Criteria Do Not Determine Acceptance
 -----------------------------------------
-                     
+
 Vendor:     Being the hardware vendor and maintaining the driver is often a
             good thing. If there is a stable working driver from other people
             already in the tree don't expect 'we are the vendor' to get your
@@ -4484,7 +4495,7 @@ Essentially, the three ways of addressing memory are (this is "real memory",
        happily most hardware designers aren't actually actively trying to make
        things any more complex than necessary, so you can assume that all 
        external hardware sees the memory the same way. 
-    
+
 Now, on normal PCs the bus address is exactly the same as the physical
 address, and things are very simple indeed. However, they are that simple
 because the memory and the devices share the same address space, and that is
@@ -4496,7 +4507,7 @@ sees a memory map something like this (this is from memory):
     0-2 GB          "real memory"
     2 GB-3 GB       "system IO" (inb/out and similar accesses on x86)
     3 GB-4 GB       "IO memory" (shared memory over the IO bus)
-        
+
 Now, that looks simple enough. However, when you look at the same thing from
 the viewpoint of the devices, you have the reverse, and the physical memory
 address 0 actually shows up as address 2 GB for any IO master.
@@ -4510,7 +4521,7 @@ you can end up with a setup like this:
      physical address:      0
      virtual address:       0xC0000000
      bus address:           0x80000000
-        
+
 where all the addresses actually point to the same thing.  It's just seen
 through different translations..
 
@@ -4699,13 +4710,13 @@ The hw_random framework is software that makes use of a special hardware
 feature on your CPU or motherboard, a Random Number Generator (RNG).  The
 software has two parts: core providing the /dev/hw_random character device and
 its sysfs support, plus a hardware-specific driver that plugs into that core.
- 
+
 To make the most effective use of these mechanisms, you should download the
 support software as well.  Download the latest version of the "rng-tools"
 package from the hw_random driver's official Web site:
- 
+
         http://sourceforge.net/projects/gkernel/
- 
+
 Those tools use /dev/hw_random to fill the kernel entropy pool, which is used
 internally and exported by the /dev/urandom and /dev/random special files.
 
@@ -4720,8 +4731,7 @@ Explaining the dreaded "No init found." boot hang message
 [94] initrd.txt
 
 Using the initial RAM disk (initrd)
-===================================
-    
+
 initrd provides the capability to load a RAM disk by the boot loader.  This
 RAM disk can then be mounted as the root file system and programs can be run
 from it. Afterwards, a new root file system can be mounted from a different
@@ -4734,11 +4744,10 @@ additional modules are loaded from initrd.
     
 This document gives a brief overview of the use of initrd. A more detailed
 discussion of the boot process can be found in [1].
-    
-    
+        
+
 Operation
----------
-    
+
 When using initrd, the system typically boots as follows:
     
   1) the boot loader loads the kernel and the initial RAM disk
@@ -4766,16 +4775,15 @@ When using initrd, the system typically boots as follows:
      usual boot sequence
 
   9) the initrd file system is removed
-    
+
     Note that changing the root directory does not involve unmounting it.  It
     is therefore possible to leave processes running on initrd during that
     procedure. Also note that file systems mounted under initrd continue to be
     accessible.
-    
+
 [95] intel_txt.txt
 
 Intel(R) TXT Overview:
-=====================
 
 Intel's technology for safer computing, Intel(R) Trusted Execution Technology
 (Intel(R) TXT), defines platform-level enhancements that provide the building
@@ -4816,7 +4824,6 @@ a memory barrier op, mb(), only with respect to I/O).
 [98] iostats.txt
 
 I/O statistics fields
----------------
 
 Since 2.4.20 (and some versions before, with patches), and 2.5.45, more
 extensive disk statistics have been introduced to help measure disk activity.
@@ -4840,7 +4847,6 @@ ISA Plug & Play support
 [101] java.txt
 
 Java(tm) Binary Kernel Support for Linv1.03
-----------------------------------------------
 
 Linux beats them ALL! While all other OS's are TALKING about direct of Java
 Binaries in the OS, Linux is doing it!
@@ -5584,8 +5590,7 @@ Mon Sep 29 10:17:39 CST 2014
 [104] kmemcheck.txt
 
 kmemcheck用于内核的未初始化内存的动态检测，它工作在内核态，与工作在用户态的
-memcheck实现机制不同。虽然kmemcheck不如memcheck精确，但是已经足够使用的了。此
-外，kmemcheck会使用更多的内存，增加系统负载，仅适合用于内核的调试。
+memcheck实现机制不同。虽然kmemcheck不如memcheck精确，但是已经足够使用的了。此外，kmemcheck会使用更多的内存，增加系统负载，仅适合用于内核的调试。
 
 kmemcheck is a debugging feature for the Linux Kernel. More specifically, it
 is a dynamic checker that detects and warns about some uses of uninitialized
@@ -5757,7 +5762,7 @@ drivers/uio/uio.c, as you can see here:
         struct kobject kobj;
         struct uio_mem *mem;
     };
-
+    
     #define to_map(map) container_of(map, struct uio_map, kobj)
 
 where the macro argument "map" is a pointer to the struct kobject in question.
@@ -5954,7 +5959,7 @@ kobject_put（kobject_init初始引用计数为1），从而造成无法成功�
                                         // init返回指向kobj的指针，引用计数为2
     kobject_put(tt->kobj);                // kobj引用计数--后，为1
     如果是这样的话，那就不存在问题了。
-    
+
 
 This notification is done through a kobject's release() method. Usually such a
 method has a form like:
@@ -5962,7 +5967,7 @@ method has a form like:
     void my_object_release(struct kobject *kobj)
     {
             struct my_object *mine = container_of(kobj, struct my_object, kobj);
-
+    
             /* Perform any additional cleanup on this object, then... */
             kfree(mine);
     }
@@ -6003,7 +6008,7 @@ kobj_type的结构体定义：
             const struct sysfs_ops *sysfs_ops;
             struct attribute    **default_attrs;
     };
-
+    
     从这个结构体定义中，我们看到它包括一个成员release，这是一个函数指针，即我
     们前面提到的为每个kobject提供的release函数。
     前面提及必须为每个kobject指定release函数，而release方法包含在ktype结构体里
@@ -6483,8 +6488,8 @@ so, its handlers aren't hit until calling enable_kprobe(kp).
 
 NOTE:
 1. With the introduction of the "symbol_name" field to struct kprobe,
-the probepoint address resolution will now be taken care of by the kernel.
-The following will now work:
+   the probepoint address resolution will now be taken care of by the kernel.
+   The following will now work:
 
         kp.symbol_name = "symbol_name";
 
@@ -6893,7 +6898,7 @@ You must initialize the kref after you allocate it.  To do this, call
 kref_init as so:
 
      struct my_data *data;
-
+    
      data = kmalloc(sizeof(*data), GFP_KERNEL);
      if (!data)
             return -ENOMEM;
@@ -6958,7 +6963,7 @@ int my_data_handler(void)
                 rv = -ENOMEM;
                 goto out;
         }
-
+    
         .
         . do stuff with data here
         .

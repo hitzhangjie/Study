@@ -10,9 +10,9 @@ $(".CLASS")引用的是当前文档中的class为CLASS的【所有】元素；
 $(this)引用的是当前元素；
 
 $(document).ready(callback)，表示当文档加载完成之后调用回调函数callback；
-$("TAG").click(function() { $("TAG").hide(); }，表示当单击文档中TAG对应元素的时候，该元素会被隐藏；
-		$("#ID).click(function() {$("$id").hide(); }，表示当单击文档中id为ID的元素时，该元素会被隐藏；
-$(".CLASS").click(function() {$("$.CLASS").hide();}，引用的是当前文档中class属性为CLASS的所有元素，当单击属于该类的某个元素时，属于该类的所有元素都将被隐藏；
+$("TAG").click(function() { \$("TAG").hide(); }，表示当单击文档中TAG对应元素的时候，该元素会被隐藏；
+		\$("#ID).click(function() {$("$id").hide(); }，表示当单击文档中id为ID的元素时，该元素会被隐藏；
+\$(".CLASS").click(function() {$("$.CLASS").hide();}，引用的是当前文档中class属性为CLASS的所有元素，当单击属于该类的某个元素时，属于该类的所有元素都将被隐藏；
 		$("button").click( function() { $(this).hide(); });表示当按钮被单击时，隐藏按钮，this指代当前元素button；
 		注意在写触发事件的回调函数时，不要忘记参数列表，是function()而不是function。
 
@@ -23,7 +23,7 @@ $(".CLASS").click(function() {$("$.CLASS").hide();}，引用的是当前文档�
 		如果要隐藏class为CLASS的所有元素，方法同上，需要获取各种标记的所有元素的列表，并遍历每一个元素，检查元素的class属性，更加繁琐了。JQuery更简单；
 		总结：
 		JQuery选择器，可以很方便地对文档中的元素进行引用，节省了自己JS编码的时间。
-
+	
 		4. JQuery事件
 		click(callback)，单击；
 		dbclick(callback)，双击；
@@ -99,12 +99,12 @@ The optional speed parameter specifies the duration of the effect. It can take t
 The optional callback parameter is a function to be executed after the animation completes.
 例子：
 指定一个CSS属性：
-$("button").click(function(){
-		  $("div").animate({left:'250px'});
+\$("button").click(function(){
+		  \$("div").animate({left:'250px'});
 		  }); 
 指定多个CSS属性：
-$("button").click(function(){
-		  $("div").animate({
+\$("button").click(function(){
+		  \$("div").animate({
 			      left:'250px',
 				      opacity:'0.5',
 					      height:'150px',
@@ -112,8 +112,8 @@ $("button").click(function(){
 							    });
 		  }); 
 使用预定义的值（执行后先消失，再执行一次，恢复原来的状态）：
-$("button").click(function(){
-		  $("div").animate({
+\$("button").click(function(){
+		  \$("div").animate({
 			      height:'toggle'
 				    });
 		  }); 
@@ -138,20 +138,20 @@ stop(true,true)，立即终止当前元素的当前动画，并清空元素上�
 10. Chaining，动作链
 以前针对元素写的代码都是一条语句一个操作，这样的话，如果对同一个元素进行了多次操作，那么就有多条语句，浏览器在执行代码的时候，就会通过选择器，多次对同一个元素进行定位，这是不必要的。
 为了节省浏览器开销，可以采用动作链，对同一个元素的定位只执行一次，将多个动作组织成一条语句：
-$("#p1").css("color","red").slideUp(2000).slideDown(2000);
+\$("#p1").css("color","red").slideUp(2000).slideDown(2000);
 对id为p1的元素进行一次定位，然后一次改变颜色、向上滚动、向下滚动；
 动作链可能会很长，可以这样分成多行：
 $("#p1").css("color","red")
-  .slideUp(2000)
+    .slideUp(2000)
 	  .slideDown(2000);
 
 	  11. DOM
-	  Document Object Model，它是个标准，定义了对HTML和XML文档的相关操作；
+	    Document Object Model，它是个标准，定义了对HTML和XML文档的相关操作；
 
 	  12. Get相关操作
-	  text() - Sets or returns the text content of selected elements
-	  html() - Sets or returns the content of selected elements (including HTML markup)
-	val() - Sets or returns the value of form fields
+	    text() - Sets or returns the text content of selected elements
+	    html() - Sets or returns the content of selected elements (including HTML markup)
+	  val() - Sets or returns the value of form fields
 
 	13. Set相关操作
 	text("your text") - Sets or returns the text content of selected elements
@@ -160,9 +160,9 @@ $("#p1").css("color","red")
 
 	attr({attrname,attrvalue}) - 设置元素属性的值；
 	例子：
-	$("#w3s").attr("href","http://www.w3schools.com/jquery");
+	\$("#w3s").attr("href","http://www.w3schools.com/jquery");
 	也可以指定一个属性列表：
-	  $("#w3s").attr({
+	  \$("#w3s").attr({
 			      "href" : "http://www.w3schools.com/jquery",
 				      "title" : "W3Schools jQuery Tutorial"
 					    });
@@ -237,13 +237,13 @@ load操作：
 $(selector).load(URL,data,callback)，URL是目标地址，data中可以封装用于查询的键值对，callback是load完成后继续调用的函数；
 例子：
 $("#div1").load("demo_test.txt")，将url中指定的文本的内容添加到id为div1的div中；
-$("#div1").load("demo_test.txt #p1")，还可以在url中指定选择器，将url中id为p1的元素内容添加到id为div1的div中；
+\$("#div1").load("demo_test.txt #p1")，还可以在url中指定选择器，将url中id为p1的元素内容添加到id为div1的div中；
 可选的callback函数有三个实参，reponseTxt、statusTxt、xhr。
 responseTxt，若load调用成功，包含装载的内容；
 statusTxt，包含load调用的状态信息；
 xhr，包含XMLHttpRequest调用对象；
 例子：
-$("#div1").load("demo_test.txt",function(responseTxt,statusTxt,xhr){
+\$("#div1").load("demo_test.txt",function(responseTxt,statusTxt,xhr){
 		  if(statusTxt=="success")
 		      alert("External content loaded successfully!");
 			    if(statusTxt=="error")
